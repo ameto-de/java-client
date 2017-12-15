@@ -1,0 +1,22 @@
+plugins {
+    id 'net.ltgt.apt' version '0.10'
+}
+
+apply {
+    plugin("java")
+}
+
+group = "de.digitalernachschub.ameto"
+version = "1.0-SNAPSHOT"
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile('com.squareup.retrofit2:retrofit:2.3.0')
+    compileOnly('org.projectlombok:lombok:1.16.18')
+	apt('org.projectlombok:lombok:1.16.18')
+    testCompile('junit:junit:4.12')
+}
