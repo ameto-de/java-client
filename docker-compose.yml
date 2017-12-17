@@ -1,0 +1,67 @@
+version: '3.2'
+services:
+  zookeeper:
+    image: digitalwonderland/zookeeper
+  kafka:
+    image: wurstmeister/kafka
+    depends_on:
+      - 'zookeeper'
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_PROTOCOL_NAME: EXTERNAL
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ADVERTISED_PORT: 9094
+      KAFKA_PROTOCOL_NAME: INTERNAL
+      KAFKA_HOST_NAME: kafka
+    ports:
+      - "9094:9094"
+  api:
+    image: dev.digitalernachschub.de/ameto/api
+    depends_on:
+      - 'kafka'
+    ports:
+      - "5000:5000"
+    environment:
+      - AMETO_KAFKA_BROKERS=kafka:9092
+      - AMETO_API_BIND_ADDRESS=0.0.0.0
+      - AMETO_API_GATEWAY=http://localhost
+  analyzers:
+    image: dev.digitalernachschub.de/ameto/analyzers
+    depends_on:
+      - 'kafka'
+    environment:
+      - AMETO_KAFKA_BROKERS=kafka:9092
+  operators:
+    image: dev.digitalernachschub.de/ameto/operators
+    depends_on:
+      - 'kafka'
+    volumes:
+      - type: bind
+        source: /run/docker.sock
+        target: /var/run/docker.sock
+    environment:
+      - AMETO_KAFKA_BROKERS=kafka:9092
+      - AMETO_OPERATORS_EVENT_STORE_PATH=/var/lib/ameto/operators/events
+  exporter:
+    image: dev.digitalernachschub.de/ameto/exporter
+    depends_on:
+      - 'kafka'
+    volumes:
+      - type: volume
+        source: ameto_exporter
+        target: /var/lib/ameto/exporter
+    environment:
+      - AMETO_KAFKA_BROKERS=kafka:9092
+      - AMETO_EXPORTER_DIR=/var/lib/ameto/exporter
+  delivery:
+    image: nginx
+    volumes:
+      - type: volume
+        source: ameto_exporter
+        target: /usr/share/nginx/html
+        read_only: true
+
+volumes:
+  ameto_exporter:
