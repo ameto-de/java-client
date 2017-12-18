@@ -1,5 +1,6 @@
 package de.digitalernachschub.ameto.client;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -7,14 +8,20 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AmetoClient {
     private final AmetoApi ameto;
 
     public AmetoClient() {
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .readTimeout(3, TimeUnit.SECONDS)
+                .writeTimeout(3, TimeUnit.SECONDS)
+                .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://localhost:9100")
                 .addConverterFactory(JacksonConverterFactory.create())
+                .client(httpClient)
                 .build();
         ameto = retrofit.create(AmetoApi.class);
     }
