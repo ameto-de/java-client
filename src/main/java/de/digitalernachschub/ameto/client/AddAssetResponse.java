@@ -9,7 +9,7 @@ import java.net.URI;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Value
-public class AddAssetResponse {
+class AddAssetResponse {
     @JsonProperty("asset_uri")
     URI assetUri;
 
