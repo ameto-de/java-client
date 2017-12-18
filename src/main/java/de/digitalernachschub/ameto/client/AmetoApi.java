@@ -12,4 +12,6 @@ public interface AmetoApi {
     Call<Void> add(@Body Pipeline pipeline);
     @GET("/pipeline")
     Call<List<Pipeline>> getPipelines();
+    @POST("/asset")
+    Call<AddAssetResponse> add(@Body byte[] asset);
 }
