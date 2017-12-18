@@ -12,7 +12,7 @@ public class AmetoClientTest {
 
     @Test
     public void testAddPipelineAddsNewPipeline() {
-        AmetoClient ameto = new AmetoClient();
+        AmetoClient ameto = new AmetoClient("http://localhost:9100");
         Pipeline pipeline = new Pipeline("anyName", Collections.singletonList(new Operator("anyOperator")));
         List<Pipeline> pipelines = ameto.getPipelines();
 
@@ -25,7 +25,7 @@ public class AmetoClientTest {
 
     @Test
     public void testGetPipelineReturnsWithoutError() {
-        AmetoClient ameto = new AmetoClient();
+        AmetoClient ameto = new AmetoClient("http://localhost:9100");
 
         ameto.getPipelines();
     }

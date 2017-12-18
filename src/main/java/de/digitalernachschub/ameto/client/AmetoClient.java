@@ -13,13 +13,13 @@ import java.util.concurrent.TimeUnit;
 public class AmetoClient {
     private final AmetoApi ameto;
 
-    public AmetoClient() {
+    public AmetoClient(String url) {
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .readTimeout(3, TimeUnit.SECONDS)
                 .writeTimeout(3, TimeUnit.SECONDS)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://localhost:9100")
+                .baseUrl(url)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient)
                 .build();
