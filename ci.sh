@@ -6,4 +6,4 @@ docker-compose up -d kafka
 sleep 10
 docker-compose up
 
-gradle test
+./gradlew test
