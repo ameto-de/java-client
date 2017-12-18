@@ -26,6 +26,11 @@ public class AmetoClient {
         ameto = retrofit.create(AmetoApi.class);
     }
 
+    /**
+     * Adds the specified pipeline to ameto.
+     * If a pipeline with the specified name already exists, it will be overwritten.
+     * @param pipeline Pipeline to be added
+     */
     public void add(Pipeline pipeline) {
         try {
             Response<Void> response = ameto.add(pipeline).execute();
@@ -34,6 +39,10 @@ public class AmetoClient {
         }
     }
 
+    /**
+     * Returns a list of all pipelines.
+     * @return List of pipelines
+     */
     public List<Pipeline> getPipelines() {
         List<Pipeline> pipelines = Collections.emptyList();
         try {
