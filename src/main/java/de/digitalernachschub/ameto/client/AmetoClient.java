@@ -13,7 +13,7 @@ public class AmetoClient {
 
     public AmetoClient() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://localhost:5000")
+                .baseUrl("http://localhost:9100")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
         ameto = retrofit.create(AmetoApi.class);

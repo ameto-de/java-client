@@ -17,7 +17,7 @@ services:
     depends_on:
       - 'kafka'
     ports:
-      - "5000:5000"
+      - "9100:5000"
     environment:
       - AMETO_KAFKA_BROKERS=kafka:9092
       - AMETO_API_BIND_ADDRESS=0.0.0.0
