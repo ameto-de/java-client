@@ -2,6 +2,8 @@ package de.digitalernachschub.ameto.client;
 
 import org.junit.Test;
 
+import java.net.URI;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,5 +30,14 @@ public class AmetoClientTest {
         AmetoClient ameto = new AmetoClient("http://localhost:9100");
 
         ameto.getPipelines();
+    }
+
+    @Test
+    public void testAddAssetReturnsWithoutError() {
+        AmetoClient ameto = new AmetoClient("http://localhost:9100");
+
+        URI assetUri = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+
+        assertNotNull(assetUri);
     }
 }
