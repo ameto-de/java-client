@@ -2,13 +2,13 @@ package de.digitalernachschub.ameto.client;
 
 import org.junit.Test;
 
-import java.net.URI;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class AmetoClientTest {
 
@@ -39,5 +39,15 @@ public class AmetoClientTest {
         String assetUri = ameto.add(Paths.get("src/test/resources/flower.jpg"));
 
         assertNotNull(assetUri);
+    }
+
+    @Test
+    public void testAddJobReturnsWithoutError() {
+        AmetoClient ameto = new AmetoClient("http://localhost:9100");
+        Job job = new Job("anyAssetId", "anyPipelineName");
+
+        String jobId = ameto.add(job);
+
+        assertNotNull(jobId);
     }
 }

@@ -6,7 +6,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -66,5 +65,15 @@ public class AmetoClient {
             e.printStackTrace();
             throw new RuntimeException("Unable to upload asset data to ameto.", e);
         }
+    }
+
+    public String add(Job job) {
+        Response<String> response = null;
+        try {
+            response = ameto.add(job).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response.body();
     }
 }
