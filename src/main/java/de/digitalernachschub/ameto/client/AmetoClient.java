@@ -57,11 +57,11 @@ public class AmetoClient {
         return pipelines;
     }
 
-    public URI add(Path assetPath) {
+    public String add(Path assetPath) {
         try {
             byte[] assetContent = Files.readAllBytes(assetPath);
             Response<AddAssetResponse> response = ameto.add(assetContent).execute();
-            return response.body().getAssetUri();
+            return response.body().getId();
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Unable to upload asset data to ameto.", e);

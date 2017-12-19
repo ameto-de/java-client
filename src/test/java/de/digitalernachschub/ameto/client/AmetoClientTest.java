@@ -36,7 +36,7 @@ public class AmetoClientTest {
     public void testAddAssetReturnsWithoutError() {
         AmetoClient ameto = new AmetoClient("http://localhost:9100");
 
-        URI assetUri = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+        String assetUri = ameto.add(Paths.get("src/test/resources/flower.jpg"));
 
         assertNotNull(assetUri);
     }
