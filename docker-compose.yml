@@ -21,7 +21,6 @@ services:
     environment:
       - AMETO_KAFKA_BROKERS=kafka:9092
       - AMETO_API_BIND_ADDRESS=0.0.0.0
-      - AMETO_API_GATEWAY=http://localhost
   analyzers:
     image: dev.digitalernachschub.de/ameto/analyzers
     depends_on:
