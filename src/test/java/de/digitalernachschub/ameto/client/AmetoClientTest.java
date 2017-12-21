@@ -1,5 +1,6 @@
 package de.digitalernachschub.ameto.client;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.file.Paths;
@@ -11,10 +12,15 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class AmetoClientTest {
+    private static AmetoClient ameto;
+
+    @Before
+    public void setUp() {
+        ameto = new AmetoClient("http://localhost:9100");
+    }
 
     @Test
     public void testAddPipelineAddsNewPipeline() {
-        AmetoClient ameto = new AmetoClient("http://localhost:9100");
         Pipeline pipeline = new Pipeline("anyName", Collections.singletonList(new Operator("anyOperator")));
         List<Pipeline> pipelines = ameto.getPipelines();
 
@@ -27,15 +33,11 @@ public class AmetoClientTest {
 
     @Test
     public void testGetPipelineReturnsWithoutError() {
-        AmetoClient ameto = new AmetoClient("http://localhost:9100");
-
         ameto.getPipelines();
     }
 
     @Test
     public void testAddAssetReturnsWithoutError() {
-        AmetoClient ameto = new AmetoClient("http://localhost:9100");
-
         String assetUri = ameto.add(Paths.get("src/test/resources/flower.jpg"));
 
         assertNotNull(assetUri);
@@ -43,7 +45,6 @@ public class AmetoClientTest {
 
     @Test
     public void testAddJobReturnsWithoutError() {
-        AmetoClient ameto = new AmetoClient("http://localhost:9100");
         Job job = new Job("anyAssetId", "anyPipelineName");
 
         String jobId = ameto.add(job);
