@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
+docker build -f Dockerfile.test -t ameto/java-client-tests .
+
 docker-compose up -d kafka
 sleep 10
-docker-compose up
+docker-compose up -d
 
-./gradlew test
+docker run --network=javaclient_default --env AMETO_API_URL=http://api:5000 --rm ameto/java-client-tests
