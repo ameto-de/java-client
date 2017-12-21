@@ -8,7 +8,9 @@ setup_test_env() {
 }
 
 run_tests() {
-    docker run --network=javaclient_default --env AMETO_API_URL=http://api:5000 --rm ameto/java-client-tests
+    local project_name=$(basename $(pwd))
+    local network_name=${project_name//-/}_default
+    docker run --network=${network_name} --env AMETO_API_URL=http://api:5000 --rm ameto/java-client-tests
 }
 
 tear_down_test_env() {
