@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -e
+
 setup_test_env() {
     docker-compose -f docker-compose.ci.yml up -d kafka
     sleep 10
