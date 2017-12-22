@@ -11,5 +11,5 @@ import java.util.List;
 @Value
 public class Pipeline {
     String name;
-    List<Operator> operators;
+    List<String> operators;
 }

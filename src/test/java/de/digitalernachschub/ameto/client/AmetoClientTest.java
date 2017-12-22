@@ -22,7 +22,7 @@ public class AmetoClientTest {
 
     @Test
     public void testAddPipelineAddsNewPipeline() {
-        Pipeline pipeline = new Pipeline("anyName", Collections.singletonList(new Operator("anyOperator")));
+        Pipeline pipeline = new Pipeline("anyName", Collections.singletonList("anyOperator"));
         List<Pipeline> pipelines = ameto.getPipelines();
 
         ameto.add(pipeline);
