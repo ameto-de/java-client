@@ -16,4 +16,6 @@ interface AmetoApi {
     Call<AddAssetResponse> add(@Body byte[] asset);
     @POST("/job")
     Call<String> add(@Body Job job);
+    @GET("/operator")
+    Call<List<Operator>> getOperators();
 }

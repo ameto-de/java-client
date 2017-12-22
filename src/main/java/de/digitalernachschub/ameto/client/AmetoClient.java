@@ -17,8 +17,8 @@ public class AmetoClient {
 
     public AmetoClient(String url) {
         OkHttpClient httpClient = new OkHttpClient.Builder()
-                .readTimeout(3, TimeUnit.SECONDS)
-                .writeTimeout(3, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(5, TimeUnit.SECONDS)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -75,5 +75,15 @@ public class AmetoClient {
             e.printStackTrace();
         }
         return response.body();
+    }
+
+    public List<Operator> getOperators() {
+        try {
+            Response<List<Operator>> response = ameto.getOperators().execute();
+            return response.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 }

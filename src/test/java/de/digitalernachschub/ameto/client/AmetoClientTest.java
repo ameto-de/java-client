@@ -52,4 +52,11 @@ public class AmetoClientTest {
 
         assertNotNull(jobId);
     }
+
+    @Test
+    public void testGetOperatorsReturnsWithoutError() {
+        List<Operator> operators = ameto.getOperators();
+
+        assertNotNull(operators);
+    }
 }
