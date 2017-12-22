@@ -34,8 +34,9 @@ public class AmetoClient {
      * @param pipeline Pipeline to be added
      */
     public void add(Pipeline pipeline) {
+        Response<Void> response;
         try {
-            Response<Void> response = ameto.add(pipeline).execute();
+             response = ameto.add(pipeline).execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
