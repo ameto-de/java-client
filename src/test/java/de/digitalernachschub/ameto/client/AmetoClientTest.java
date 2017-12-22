@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +31,13 @@ public class AmetoClientTest {
         List<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
         assertThat(pipelinesAfterAdd.contains(pipeline), is(true));
         assertThat(pipelinesAfterAdd.size(), is(pipelines.size() + 1));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testAddPipelineThrowsExceptionWhenOperatorIsUnknown() {
+        Pipeline pipeline = new Pipeline("anyName", Arrays.asList("noop", "unknownOperator", "noop"));
+
+        ameto.add(pipeline);
     }
 
     @Test

@@ -1,11 +1,14 @@
 package de.digitalernachschub.ameto.client;
 
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AmetoClient {
+    private final Retrofit retrofit;
     private final AmetoApi ameto;
 
     public AmetoClient(String url) {
@@ -20,7 +24,7 @@ public class AmetoClient {
                 .readTimeout(5, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .build();
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient)
@@ -37,8 +41,15 @@ public class AmetoClient {
         Response<Void> response;
         try {
              response = ameto.add(pipeline).execute();
+            if (!response.isSuccessful()) {
+                Converter<ResponseBody, AddPipelineError> errorConverter =
+                        retrofit.responseBodyConverter(AddPipelineError.class, new Annotation[0]);
+                AddPipelineError error = errorConverter.convert(response.errorBody());
+                throw new RuntimeException(error.getError());
+            }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
