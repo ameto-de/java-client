@@ -2,10 +2,13 @@ package de.digitalernachschub.ameto.client;
 
 import lombok.Value;
 
+import java.util.List;
+
 /**
- * Represents a processing step in a pipeline.
+ * Describes a processing step in a pipeline.
  */
 @Value
 public class Operator {
     String name;
+    List<String> consumes;
 }
