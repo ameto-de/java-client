@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -33,11 +34,13 @@ public class AmetoClientTest {
         assertThat(pipelinesAfterAdd.size(), is(pipelines.size() + 1));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testAddPipelineThrowsExceptionWhenOperatorIsUnknown() {
         Pipeline pipeline = new Pipeline("anyName", Arrays.asList("noop", "unknownOperator", "noop"));
 
-        ameto.add(pipeline);
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> ameto.add(pipeline))
+                .withMessageContaining("unknownOperator");
     }
 
     @Test
