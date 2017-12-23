@@ -1,5 +1,6 @@
 package de.digitalernachschub.ameto.client;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,6 +42,8 @@ public class AmetoClientTest {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> ameto.add(pipeline))
                 .withMessageContaining("unknownOperator");
+        List<Pipeline> pipelines = ameto.getPipelines();
+        Assertions.assertThat(pipelines).doesNotContain(pipeline);
     }
 
     @Test
