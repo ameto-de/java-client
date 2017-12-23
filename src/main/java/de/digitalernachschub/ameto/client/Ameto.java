@@ -15,11 +15,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AmetoClient {
+public class Ameto {
     private final Retrofit retrofit;
     private final AmetoApi ameto;
 
-    public AmetoClient(String url) {
+    public Ameto(String url) {
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .readTimeout(5, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)

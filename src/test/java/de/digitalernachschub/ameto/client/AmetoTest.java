@@ -14,13 +14,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class AmetoClientTest {
-    private static AmetoClient ameto;
+public class AmetoTest {
+    private static Ameto ameto;
 
     @Before
     public void setUp() {
         String apiUrl = System.getenv().getOrDefault("AMETO_API_URL", "http://localhost:9100");
-        ameto = new AmetoClient(apiUrl);
+        ameto = new Ameto(apiUrl);
     }
 
     @Test
