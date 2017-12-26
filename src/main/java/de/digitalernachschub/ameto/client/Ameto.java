@@ -89,6 +89,17 @@ public class Ameto {
         return response.body();
     }
 
+    public List<Job> getJobs() {
+        Response<List<Job>> response;
+        try {
+            response = ameto.getJobs().execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return response.body();
+    }
+
     public List<Operator> getOperators() {
         try {
             Response<List<Operator>> response = ameto.getOperators().execute();

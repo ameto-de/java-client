@@ -68,6 +68,13 @@ public class AmetoTest {
     }
 
     @Test
+    public void getJobsReturnsWithoutError() {
+        List<Job> jobs = ameto.getJobs();
+
+        assertNotNull(jobs);
+    }
+
+    @Test
     public void testGetOperatorsReturnsWithoutError() {
         List<Operator> operators = ameto.getOperators();
 
