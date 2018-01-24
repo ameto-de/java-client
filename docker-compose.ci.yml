@@ -20,12 +20,6 @@ services:
     environment:
       - AMETO_KAFKA_BROKERS=kafka:9092
       - AMETO_API_BIND_ADDRESS=0.0.0.0
-  analyzers:
-    image: dev.digitalernachschub.de/ameto/analyzers
-    depends_on:
-      - 'kafka'
-    environment:
-      - AMETO_KAFKA_BROKERS=kafka:9092
   operators:
     image: dev.digitalernachschub.de/ameto/operators
     depends_on:
