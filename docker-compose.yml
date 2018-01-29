@@ -51,6 +51,8 @@ services:
       - AMETO_EXPORTER_DIR=/var/lib/ameto/exporter
   delivery:
     image: nginx
+    ports:
+      - "9200:80"
     volumes:
       - type: volume
         source: ameto_exporter
