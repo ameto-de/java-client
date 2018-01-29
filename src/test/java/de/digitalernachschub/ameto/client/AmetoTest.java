@@ -25,7 +25,7 @@ public class AmetoTest {
 
     @Test
     public void testAddPipelineAddsNewPipeline() {
-        Pipeline pipeline = new Pipeline("anyName", Collections.singletonList("noop"));
+        Pipeline pipeline = new Pipeline("anyName", Collections.singletonList(new Pipeline.Step("noop")));
         List<Pipeline> pipelines = ameto.getPipelines();
 
         ameto.add(pipeline);
@@ -37,7 +37,9 @@ public class AmetoTest {
 
     @Test
     public void testAddPipelineThrowsExceptionWhenOperatorIsUnknown() {
-        Pipeline pipeline = new Pipeline("anyName", Arrays.asList("noop", "unknownOperator", "noop"));
+        Pipeline.Step noop = new Pipeline.Step("noop");
+        Pipeline.Step unknownStep = new Pipeline.Step("unknownOperator");
+        Pipeline pipeline = new Pipeline("anyName", Arrays.asList(noop, unknownStep, noop));
 
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> ameto.add(pipeline))

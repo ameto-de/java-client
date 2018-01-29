@@ -1,7 +1,9 @@
 package de.digitalernachschub.ameto.client;
 
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,5 +13,17 @@ import java.util.List;
 @Value
 public class Pipeline {
     String name;
-    List<String> operators;
+    List<Step> steps;
+
+    @Value
+    @RequiredArgsConstructor
+    public static class Step {
+        String operator;
+        List<String> arguments;
+
+        public Step(String operator) {
+            this.operator = operator;
+            arguments = Collections.emptyList();
+        }
+    }
 }
