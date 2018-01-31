@@ -1,5 +1,6 @@
 package de.digitalernachschub.ameto.client;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -13,7 +14,7 @@ interface AmetoApi {
     @GET("/pipeline")
     Call<List<Pipeline>> getPipelines();
     @POST("/asset")
-    Call<AddAssetResponse> add(@Body byte[] asset);
+    Call<AddAssetResponse> add(@Body RequestBody asset);
     @GET("/job")
     Call<List<Job>> getJobs();
     @POST("/job")

@@ -1,6 +1,8 @@
 package de.digitalernachschub.ameto.client;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Response;
@@ -71,7 +73,8 @@ public class Ameto {
     public String add(Path assetPath) {
         try {
             byte[] assetContent = Files.readAllBytes(assetPath);
-            Response<AddAssetResponse> response = ameto.add(assetContent).execute();
+            RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), assetContent);
+            Response<AddAssetResponse> response = ameto.add(body).execute();
             return response.body().getId();
         } catch (IOException e) {
             e.printStackTrace();
