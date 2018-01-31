@@ -5,6 +5,7 @@ setup_test_env() {
     docker-compose -f docker-compose.ci.yml up -d kafka
     sleep 10
     docker-compose -f docker-compose.ci.yml up -d
+    sleep 10
     local project_name=$(basename $(pwd))
     local network_name=${project_name//-/}_default
     python3.6 -m ametoctl package noop-operator.toml | docker run --interactive --network=${network_name} --rm dev.digitalernachschub.de/ameto/ametoctl --broker kafka:9092 add -
