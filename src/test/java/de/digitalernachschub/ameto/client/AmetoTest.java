@@ -65,15 +65,6 @@ public class AmetoTest {
     }
 
     @Test
-    public void testAddJobReturnsWithoutError() {
-        Job job = new Job("anyAssetId", "anyPipelineName");
-
-        String jobId = ameto.add(job);
-
-        assertNotNull(jobId);
-    }
-
-    @Test
     public void getJobsReturnsWithoutError() {
         List<Job> jobs = ameto.getJobs();
 

@@ -88,16 +88,6 @@ public class Ameto {
         }
     }
 
-    public String add(Job job) {
-        Response<String> response = null;
-        try {
-            response = ameto.add(job).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return response.body();
-    }
-
     public List<Job> getJobs() {
         Response<List<Job>> response;
         try {
