@@ -22,12 +22,10 @@ import static org.junit.Assert.*;
 
 public class AmetoTest {
     private static Ameto ameto;
-    private static String deliveryBaseUrl;
 
     @Before
     public void setUp() {
         String apiUrl = System.getenv().getOrDefault("AMETO_API_URL", "http://localhost:9100");
-        deliveryBaseUrl = System.getenv().getOrDefault("AMETO_DELIVERY_URL", "http://localhost:9200/");
         ameto = new Ameto(apiUrl);
     }
 
@@ -87,10 +85,9 @@ public class AmetoTest {
         Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList("noop"));
         Future<Asset> uploadResult = ameto.add(Paths.get("src/test/resources/flower.jpg"));
         Asset asset = uploadResult.get();
-        pipeline.push(asset);
+        String assetUrl = pipeline.push(asset);
         Thread.sleep(5000L);
         OkHttpClient http = new OkHttpClient();
-        String assetUrl = deliveryBaseUrl + asset.getId();
         Request getProcessedAsset = new Request.Builder()
                 .url(assetUrl)
                 .build();

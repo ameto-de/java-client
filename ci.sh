@@ -14,7 +14,7 @@ setup_test_env() {
 run_tests() {
     local project_name=$(basename $(pwd))
     local network_name=${project_name//-/}_default
-    docker run --network=${network_name} --env AMETO_API_URL=http://api:5000 --env AMETO_DELIVERY_URL=http://delivery:80/ \
+    docker run --network=${network_name} --env AMETO_API_URL=http://api:5000 \
       --mount type=volume,source=${project_name}_gradle_cache,target=/home/gradle/.gradle --rm ameto/java-client-tests
 }
 

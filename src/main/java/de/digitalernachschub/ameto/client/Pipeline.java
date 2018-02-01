@@ -4,6 +4,7 @@ import de.digitalernachschub.ameto.client.dto.Job;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import retrofit2.Response;
 
 import java.io.IOException;
 
@@ -13,12 +14,15 @@ public class Pipeline {
     @Getter
     private final String name;
 
-    public void push(Asset asset) {
+    public String push(Asset asset) {
         Job job = new Job(asset.getId(), getName());
         try {
-            api.add(job).execute();
+            Response<String> addAssetResponse = api.add(job).execute();
+            String assetUrl = addAssetResponse.body();
+            return assetUrl;
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
