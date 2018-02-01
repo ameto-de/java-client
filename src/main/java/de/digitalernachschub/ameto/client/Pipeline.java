@@ -1,5 +1,6 @@
 package de.digitalernachschub.ameto.client;
 
+import de.digitalernachschub.ameto.client.dto.Job;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

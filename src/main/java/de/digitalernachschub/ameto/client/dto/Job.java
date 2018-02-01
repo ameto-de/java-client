@@ -1,4 +1,4 @@
-package de.digitalernachschub.ameto.client;
+package de.digitalernachschub.ameto.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
