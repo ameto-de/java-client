@@ -58,7 +58,7 @@ public class Ameto {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return new de.digitalernachschub.ameto.client.Pipeline(name);
+        return new de.digitalernachschub.ameto.client.Pipeline(ameto, name);
     }
 
     /**
