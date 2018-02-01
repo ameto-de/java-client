@@ -3,7 +3,9 @@ package de.digitalernachschub.ameto.client;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.assertj.core.api.Assertions;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 public class AmetoTest {
@@ -31,27 +33,42 @@ public class AmetoTest {
 
     @Test
     public void testAddPipelineAddsNewPipeline() {
-        Pipeline pipeline = new Pipeline("anyName", Collections.singletonList(new Pipeline.Step("noop")));
         List<Pipeline> pipelines = ameto.getPipelines();
+        String pipelineName = "anyName";
 
-        ameto.add(pipeline);
+        ameto.add(pipelineName, Collections.singletonList(new Pipeline.Step("noop")));
 
         List<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
-        assertThat(pipelinesAfterAdd.contains(pipeline), is(true));
+        assertThat(pipelinesAfterAdd, hasItem(pipelineWithName(pipelineName)));
         assertThat(pipelinesAfterAdd.size(), is(pipelines.size() + 1));
+    }
+
+    private static Matcher<Pipeline> pipelineWithName(String name) {
+        return new TypeSafeDiagnosingMatcher<Pipeline>() {
+            @Override
+            protected boolean matchesSafely(Pipeline item, Description mismatchDescription) {
+                mismatchDescription.appendText("Pipeline with name ").appendText(name);
+                return name.equals(item.getName());
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Pipeline with name ").appendText(name);
+            }
+        };
     }
 
     @Test
     public void testAddPipelineThrowsExceptionWhenOperatorIsUnknown() {
         Pipeline.Step noop = new Pipeline.Step("noop");
         Pipeline.Step unknownStep = new Pipeline.Step("unknownOperator");
-        Pipeline pipeline = new Pipeline("anyName", Arrays.asList(noop, unknownStep, noop));
+        String pipelineName = "anyName2";
 
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> ameto.add(pipeline))
+                .isThrownBy(() -> ameto.add(pipelineName, Arrays.asList(noop, unknownStep, noop)))
                 .withMessageContaining("unknownOperator");
         List<Pipeline> pipelines = ameto.getPipelines();
-        Assertions.assertThat(pipelines).doesNotContain(pipeline);
+        assertThat(pipelines, not(hasItem(pipelineWithName(pipelineName))));
     }
 
     @Test
@@ -91,10 +108,10 @@ public class AmetoTest {
 
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException {
-        Pipeline pipeline = new Pipeline("jpegTestPipeline", Collections.singletonList(new Pipeline.Step("noop")));
-        ameto.add(pipeline);
+        String pipelineName = "jpegTestPipeline";
+        ameto.add(pipelineName, Collections.singletonList(new Pipeline.Step("noop")));
         String assetId = ameto.add(Paths.get("src/test/resources/flower.jpg"));
-        Job job = new Job(assetId, pipeline.getName());
+        Job job = new Job(assetId, pipelineName);
         ameto.add(job);
         Thread.sleep(5000L);
         OkHttpClient http = new OkHttpClient();

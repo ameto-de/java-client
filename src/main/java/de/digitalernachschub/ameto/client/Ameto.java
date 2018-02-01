@@ -37,11 +37,13 @@ public class Ameto {
     /**
      * Adds the specified pipeline to ameto.
      * If a pipeline with the specified name already exists, it will be overwritten.
-     * @param pipeline Pipeline to be added
+     * @param name Pipeline name
+     * @param steps Processing steps
      */
-    public void add(Pipeline pipeline) {
+    public void add(String name, List<Pipeline.Step> steps) {
         Response<Void> response;
         try {
+            Pipeline pipeline = new Pipeline(name, steps);
              response = ameto.add(pipeline).execute();
             if (!response.isSuccessful()) {
                 Converter<ResponseBody, AddPipelineError> errorConverter =
