@@ -21,8 +21,8 @@ services:
     environment:
       - AMETO_KAFKA_BROKERS=kafka:9092
       - AMETO_API_BIND_ADDRESS=0.0.0.0
-  operators:
-    image: dev.digitalernachschub.de/ameto/operators
+  dispatcher:
+    image: dev.digitalernachschub.de/ameto/dispatcher
     depends_on:
       - 'kafka'
     volumes:
@@ -31,7 +31,7 @@ services:
         target: /var/run/docker.sock
     environment:
       - AMETO_KAFKA_BROKERS=kafka:9092
-      - AMETO_OPERATORS_EVENT_STORE_PATH=/var/lib/ameto/operators/events
+      - AMETO_OPERATORS_EVENT_STORE_PATH=/var/lib/ameto/dispatcher/events
   exporter:
     image: dev.digitalernachschub.de/ameto/exporter
     depends_on:
