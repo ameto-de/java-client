@@ -12,8 +12,8 @@ public class Pipeline {
     @Getter
     private final String name;
 
-    public void push(String assetId) {
-        Job job = new Job(assetId, getName());
+    public void push(Asset asset) {
+        Job job = new Job(asset.getId(), getName());
         try {
             api.add(job).execute();
         } catch (IOException e) {
