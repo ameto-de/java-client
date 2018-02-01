@@ -1,5 +1,6 @@
 package de.digitalernachschub.ameto.client;
 
+import de.digitalernachschub.ameto.client.dto.Pipeline;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
