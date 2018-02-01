@@ -1,6 +1,7 @@
 package de.digitalernachschub.ameto.client;
 
 import de.digitalernachschub.ameto.client.dto.Pipeline;
+import lombok.val;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -88,7 +89,7 @@ public class Ameto {
         }
     }
 
-    public List<Job> getJobs() {
+    public List<String> getJobs() {
         Response<List<Job>> response;
         try {
             response = ameto.getJobs().execute();
@@ -96,7 +97,8 @@ public class Ameto {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return response.body();
+        val jobs = response.body();
+        return jobs.stream().map(Job::getId).collect(Collectors.toList());
     }
 
     public List<Operator> getOperators() {
