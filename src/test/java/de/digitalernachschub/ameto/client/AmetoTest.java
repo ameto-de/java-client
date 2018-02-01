@@ -89,10 +89,9 @@ public class AmetoTest {
 
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException {
-        String pipelineName = "jpegTestPipeline";
-        ameto.add(pipelineName, Collections.singletonList("noop"));
+        Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList("noop"));
         String assetId = ameto.add(Paths.get("src/test/resources/flower.jpg"));
-        Job job = new Job(assetId, pipelineName);
+        Job job = new Job(assetId, pipeline.getName());
         ameto.add(job);
         Thread.sleep(5000L);
         OkHttpClient http = new OkHttpClient();

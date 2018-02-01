@@ -42,7 +42,7 @@ public class Ameto {
      * @param name Pipeline name
      * @param steps Processing steps
      */
-    public void add(String name, List<String> steps) {
+    public de.digitalernachschub.ameto.client.Pipeline add(String name, List<String> steps) {
         Response<Void> response;
         try {
             List<Pipeline.Step> steps_ = steps.stream().map(Pipeline.Step::new).collect(Collectors.toList());
@@ -58,6 +58,7 @@ public class Ameto {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+        return new de.digitalernachschub.ameto.client.Pipeline(name);
     }
 
     /**
