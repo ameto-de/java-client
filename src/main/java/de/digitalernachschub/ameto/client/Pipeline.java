@@ -11,6 +11,7 @@ import okhttp3.Request;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
@@ -20,7 +21,7 @@ public class Pipeline {
     @Getter
     private final String name;
 
-    public Future<byte[]> push(Asset asset) {
+    public Future<Asset> push(Asset asset) {
         Job job = new Job(asset.getId(), getName());
         try {
             Response<String> addAssetResponse = api.add(job).execute();
@@ -29,7 +30,7 @@ public class Pipeline {
             Request getProcessedAsset = new Request.Builder()
                     .url(assetUrl)
                     .build();
-            CompletableFuture<byte[]> result = new CompletableFuture<>();
+            CompletableFuture<Asset> result = new CompletableFuture<>();
             Callback processAssetCallback = new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -38,7 +39,9 @@ public class Pipeline {
 
                 @Override
                 public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                    result.complete(response.body().bytes());
+                    String assetId = new URL(assetUrl).getPath();
+                    Asset processedAsset = new Asset(assetId, response.body().bytes());
+                    result.complete(processedAsset);
                 }
             };
             http.newCall(getProcessedAsset).enqueue(processAssetCallback);

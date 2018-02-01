@@ -1,9 +1,6 @@
 package de.digitalernachschub.ameto.client;
 
 import lombok.val;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -86,9 +83,9 @@ public class AmetoTest {
         Future<Asset> uploadResult = ameto.add(Paths.get("src/test/resources/flower.jpg"));
         Asset asset = uploadResult.get();
 
-        Future<byte[]> processedAsset = pipeline.push(asset);
+        Future<Asset> processedAsset = pipeline.push(asset);
 
         byte[] imageBytes = Files.readAllBytes(Paths.get("src/test/resources/flower.jpg"));
-        assertArrayEquals(imageBytes, processedAsset.get());
+        assertArrayEquals(imageBytes, processedAsset.get().getEssence());
     }
 }
