@@ -4,9 +4,15 @@ import de.digitalernachschub.ameto.client.dto.Job;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class Pipeline {
@@ -14,12 +20,29 @@ public class Pipeline {
     @Getter
     private final String name;
 
-    public String push(Asset asset) {
+    public Future<byte[]> push(Asset asset) {
         Job job = new Job(asset.getId(), getName());
         try {
             Response<String> addAssetResponse = api.add(job).execute();
             String assetUrl = addAssetResponse.body();
-            return assetUrl;
+            OkHttpClient http = new OkHttpClient();
+            Request getProcessedAsset = new Request.Builder()
+                    .url(assetUrl)
+                    .build();
+            CompletableFuture<byte[]> result = new CompletableFuture<>();
+            Callback processAssetCallback = new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    result.completeExceptionally(e);
+                }
+
+                @Override
+                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                    result.complete(response.body().bytes());
+                }
+            };
+            http.newCall(getProcessedAsset).enqueue(processAssetCallback);
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

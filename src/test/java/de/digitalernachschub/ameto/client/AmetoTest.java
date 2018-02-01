@@ -85,17 +85,10 @@ public class AmetoTest {
         Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList("noop"));
         Future<Asset> uploadResult = ameto.add(Paths.get("src/test/resources/flower.jpg"));
         Asset asset = uploadResult.get();
-        String assetUrl = pipeline.push(asset);
-        Thread.sleep(5000L);
-        OkHttpClient http = new OkHttpClient();
-        Request getProcessedAsset = new Request.Builder()
-                .url(assetUrl)
-                .build();
 
-        Response response = http.newCall(getProcessedAsset).execute();
+        Future<byte[]> processedAsset = pipeline.push(asset);
 
         byte[] imageBytes = Files.readAllBytes(Paths.get("src/test/resources/flower.jpg"));
-        byte[] processedImageBytes = response.body().bytes();
-        assertArrayEquals(imageBytes, processedImageBytes);
+        assertArrayEquals(imageBytes, processedAsset.get());
     }
 }
