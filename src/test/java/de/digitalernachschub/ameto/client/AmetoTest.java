@@ -3,9 +3,6 @@ package de.digitalernachschub.ameto.client;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,29 +30,14 @@ public class AmetoTest {
 
     @Test
     public void testAddPipelineAddsNewPipeline() {
-        List<Pipeline> pipelines = ameto.getPipelines();
+        List<String> pipelines = ameto.getPipelines();
         String pipelineName = "anyName";
 
         ameto.add(pipelineName, Collections.singletonList(new Pipeline.Step("noop")));
 
-        List<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
-        assertThat(pipelinesAfterAdd, hasItem(pipelineWithName(pipelineName)));
+        List<String> pipelinesAfterAdd = ameto.getPipelines();
+        assertThat(pipelinesAfterAdd, hasItem(pipelineName));
         assertThat(pipelinesAfterAdd.size(), is(pipelines.size() + 1));
-    }
-
-    private static Matcher<Pipeline> pipelineWithName(String name) {
-        return new TypeSafeDiagnosingMatcher<Pipeline>() {
-            @Override
-            protected boolean matchesSafely(Pipeline item, Description mismatchDescription) {
-                mismatchDescription.appendText("Pipeline with name ").appendText(name);
-                return name.equals(item.getName());
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Pipeline with name ").appendText(name);
-            }
-        };
     }
 
     @Test
@@ -67,8 +49,8 @@ public class AmetoTest {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> ameto.add(pipelineName, Arrays.asList(noop, unknownStep, noop)))
                 .withMessageContaining("unknownOperator");
-        List<Pipeline> pipelines = ameto.getPipelines();
-        assertThat(pipelines, not(hasItem(pipelineWithName(pipelineName))));
+        List<String> pipelines = ameto.getPipelines();
+        assertThat(pipelines, not(hasItem(pipelineName)));
     }
 
     @Test

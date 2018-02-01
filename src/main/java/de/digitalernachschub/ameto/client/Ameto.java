@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class Ameto {
     private final Retrofit retrofit;
@@ -61,7 +62,7 @@ public class Ameto {
      * Returns a list of all pipelines.
      * @return List of pipelines
      */
-    public List<Pipeline> getPipelines() {
+    public List<String> getPipelines() {
         List<Pipeline> pipelines = Collections.emptyList();
         try {
             Response<List<Pipeline>> response = ameto.getPipelines().execute();
@@ -69,7 +70,7 @@ public class Ameto {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return pipelines;
+        return pipelines.stream().map(Pipeline::getName).collect(Collectors.toList());
     }
 
     public String add(Path assetPath) {
