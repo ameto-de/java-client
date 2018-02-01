@@ -76,12 +76,12 @@ public class Ameto {
         return pipelines.stream().map(Pipeline::getName).collect(Collectors.toList());
     }
 
-    public String add(Path assetPath) {
+    public Asset add(Path assetPath) {
         try {
             byte[] assetContent = Files.readAllBytes(assetPath);
             RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), assetContent);
             Response<AddAssetResponse> response = ameto.add(body).execute();
-            return response.body().getId();
+            return new Asset(response.body().getId());
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Unable to upload asset data to ameto.", e);

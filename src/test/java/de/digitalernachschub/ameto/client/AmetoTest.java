@@ -59,9 +59,9 @@ public class AmetoTest {
 
     @Test
     public void testAddAssetReturnsWithoutError() {
-        String assetUri = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+        Asset asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
 
-        assertNotNull(assetUri);
+        assertNotNull(asset);
     }
 
     @Test
@@ -90,11 +90,11 @@ public class AmetoTest {
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException {
         Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList("noop"));
-        String assetId = ameto.add(Paths.get("src/test/resources/flower.jpg"));
-        pipeline.push(assetId);
+        Asset asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+        pipeline.push(asset.getId());
         Thread.sleep(5000L);
         OkHttpClient http = new OkHttpClient();
-        String assetUrl = deliveryBaseUrl + assetId;
+        String assetUrl = deliveryBaseUrl + asset.getId();
         Request getProcessedAsset = new Request.Builder()
                 .url(assetUrl)
                 .build();
