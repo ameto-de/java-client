@@ -86,7 +86,7 @@ public class Ameto {
             Callback<AddAssetResponse> addAssetCallback = new Callback<AddAssetResponse>() {
                 @Override
                 public void onResponse(Call<AddAssetResponse> call, Response<AddAssetResponse> response) {
-                    val asset = new Asset(response.body().getId());
+                    val asset = new Asset(response.body().getId(), assetContent);
                     result.complete(asset);
                 }
 

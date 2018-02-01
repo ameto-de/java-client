@@ -7,4 +7,5 @@ import lombok.Value;
 @RequiredArgsConstructor
 public class Asset {
     String id;
+    byte[] essence;
 }
