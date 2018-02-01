@@ -7,9 +7,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit2.Converter;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import retrofit2.*;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
@@ -18,6 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -78,12 +78,25 @@ public class Ameto {
         return pipelines.stream().map(Pipeline::getName).collect(Collectors.toList());
     }
 
-    public Asset add(Path assetPath) {
+    public Future<Asset> add(Path assetPath) {
         try {
             byte[] assetContent = Files.readAllBytes(assetPath);
             RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), assetContent);
-            Response<AddAssetResponse> response = ameto.add(body).execute();
-            return new Asset(response.body().getId());
+            CompletableFuture<Asset> result = new CompletableFuture<>();
+            Callback<AddAssetResponse> addAssetCallback = new Callback<AddAssetResponse>() {
+                @Override
+                public void onResponse(Call<AddAssetResponse> call, Response<AddAssetResponse> response) {
+                    val asset = new Asset(response.body().getId());
+                    result.complete(asset);
+                }
+
+                @Override
+                public void onFailure(Call<AddAssetResponse> call, Throwable t) {
+                    result.completeExceptionally(t);
+                }
+            };
+            ameto.add(body).enqueue(addAssetCallback);
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Unable to upload asset data to ameto.", e);

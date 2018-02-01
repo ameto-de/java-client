@@ -1,5 +1,6 @@
 package de.digitalernachschub.ameto.client;
 
+import lombok.val;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -12,6 +13,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.hamcrest.CoreMatchers.*;
@@ -58,9 +61,10 @@ public class AmetoTest {
     }
 
     @Test
-    public void testAddAssetReturnsWithoutError() {
-        Asset asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+    public void testAddAssetReturnsWithoutError() throws ExecutionException, InterruptedException {
+        val assetFuture = ameto.add(Paths.get("src/test/resources/flower.jpg"));
 
+        val asset = assetFuture.get();
         assertNotNull(asset);
     }
 
@@ -79,9 +83,10 @@ public class AmetoTest {
     }
 
     @Test
-    public void testAmetoProcessesJpegImage() throws InterruptedException, IOException {
+    public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
         Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList("noop"));
-        Asset asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+        Future<Asset> uploadResult = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+        Asset asset = uploadResult.get();
         pipeline.push(asset);
         Thread.sleep(5000L);
         OkHttpClient http = new OkHttpClient();
