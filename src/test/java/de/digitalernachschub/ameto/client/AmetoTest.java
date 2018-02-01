@@ -33,7 +33,7 @@ public class AmetoTest {
         List<String> pipelines = ameto.getPipelines();
         String pipelineName = "anyName";
 
-        ameto.add(pipelineName, Collections.singletonList(new Pipeline.Step("noop")));
+        ameto.add(pipelineName, Collections.singletonList("noop"));
 
         List<String> pipelinesAfterAdd = ameto.getPipelines();
         assertThat(pipelinesAfterAdd, hasItem(pipelineName));
@@ -42,13 +42,12 @@ public class AmetoTest {
 
     @Test
     public void testAddPipelineThrowsExceptionWhenOperatorIsUnknown() {
-        Pipeline.Step noop = new Pipeline.Step("noop");
-        Pipeline.Step unknownStep = new Pipeline.Step("unknownOperator");
         String pipelineName = "anyName2";
+        String unknownOperatorName = "unknownOperator";
 
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> ameto.add(pipelineName, Arrays.asList(noop, unknownStep, noop)))
-                .withMessageContaining("unknownOperator");
+                .isThrownBy(() -> ameto.add(pipelineName, Arrays.asList("noop", unknownOperatorName, "noop")))
+                .withMessageContaining(unknownOperatorName);
         List<String> pipelines = ameto.getPipelines();
         assertThat(pipelines, not(hasItem(pipelineName)));
     }
@@ -91,7 +90,7 @@ public class AmetoTest {
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException {
         String pipelineName = "jpegTestPipeline";
-        ameto.add(pipelineName, Collections.singletonList(new Pipeline.Step("noop")));
+        ameto.add(pipelineName, Collections.singletonList("noop"));
         String assetId = ameto.add(Paths.get("src/test/resources/flower.jpg"));
         Job job = new Job(assetId, pipelineName);
         ameto.add(job);

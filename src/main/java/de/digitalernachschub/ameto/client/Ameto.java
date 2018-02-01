@@ -41,11 +41,12 @@ public class Ameto {
      * @param name Pipeline name
      * @param steps Processing steps
      */
-    public void add(String name, List<Pipeline.Step> steps) {
+    public void add(String name, List<String> steps) {
         Response<Void> response;
         try {
-            Pipeline pipeline = new Pipeline(name, steps);
-             response = ameto.add(pipeline).execute();
+            List<Pipeline.Step> steps_ = steps.stream().map(Pipeline.Step::new).collect(Collectors.toList());
+            Pipeline pipeline = new Pipeline(name, steps_);
+            response = ameto.add(pipeline).execute();
             if (!response.isSuccessful()) {
                 Converter<ResponseBody, AddPipelineError> errorConverter =
                         retrofit.responseBodyConverter(AddPipelineError.class, new Annotation[0]);
