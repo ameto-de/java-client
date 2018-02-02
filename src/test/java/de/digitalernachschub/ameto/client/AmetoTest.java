@@ -83,7 +83,7 @@ public class AmetoTest {
         Future<Asset> uploadResult = ameto.add(Paths.get("src/test/resources/flower.jpg"));
         Asset asset = uploadResult.get();
 
-        Future<Asset> processedAsset = pipeline.push(asset);
+        Future<ProcessedAsset> processedAsset = pipeline.push(asset);
 
         byte[] imageBytes = Files.readAllBytes(Paths.get("src/test/resources/flower.jpg"));
         assertArrayEquals(imageBytes, processedAsset.get().getEssence());

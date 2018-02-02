@@ -21,7 +21,7 @@ public class Pipeline {
     @Getter
     private final String name;
 
-    public Future<Asset> push(Asset asset) {
+    public Future<ProcessedAsset> push(Asset asset) {
         Job job = new Job(asset.getId(), getName());
         try {
             Response<String> addAssetResponse = api.add(job).execute();
@@ -30,7 +30,7 @@ public class Pipeline {
             Request getProcessedAsset = new Request.Builder()
                     .url(assetUrl)
                     .build();
-            CompletableFuture<Asset> result = new CompletableFuture<>();
+            CompletableFuture<ProcessedAsset> result = new CompletableFuture<>();
             Callback processAssetCallback = new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -40,7 +40,7 @@ public class Pipeline {
                 @Override
                 public void onResponse(Call call, okhttp3.Response response) throws IOException {
                     String assetId = new URL(assetUrl).getPath();
-                    Asset processedAsset = new Asset(assetId, response.body().bytes());
+                    ProcessedAsset processedAsset = new ProcessedAsset(assetId, response.body().bytes());
                     result.complete(processedAsset);
                 }
             };
