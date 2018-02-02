@@ -103,7 +103,7 @@ public class Ameto {
         }
     }
 
-    public List<String> getJobs() {
+    public List<de.digitalernachschub.ameto.client.Job> getJobs() {
         Response<List<Job>> response;
         try {
             response = ameto.getJobs().execute();
@@ -112,7 +112,10 @@ public class Ameto {
             throw new RuntimeException(e);
         }
         val jobs = response.body();
-        return jobs.stream().map(Job::getId).collect(Collectors.toList());
+        return jobs.stream()
+                .map(job -> new de.digitalernachschub.ameto.client.Job(
+                        job.getId(), job.getAsset(), job.getPipeline()))
+                .collect(Collectors.toList());
     }
 
     public List<Operator> getOperators() {
