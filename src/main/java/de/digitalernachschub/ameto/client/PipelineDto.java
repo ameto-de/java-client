@@ -11,7 +11,7 @@ import java.util.List;
  * A pipeline consists of a unique name and an ordered list of processing steps, the operators.
  */
 @Value
-public class PipelineDto {
+class PipelineDto {
     String name;
     List<Step> steps;
 
