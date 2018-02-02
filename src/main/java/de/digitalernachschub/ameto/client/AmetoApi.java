@@ -1,7 +1,5 @@
 package de.digitalernachschub.ameto.client;
 
-import de.digitalernachschub.ameto.client.dto.JobDto;
-import de.digitalernachschub.ameto.client.dto.PipelineDto;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;

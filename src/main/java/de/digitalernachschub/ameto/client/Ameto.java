@@ -1,7 +1,5 @@
 package de.digitalernachschub.ameto.client;
 
-import de.digitalernachschub.ameto.client.dto.JobDto;
-import de.digitalernachschub.ameto.client.dto.PipelineDto;
 import lombok.val;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
