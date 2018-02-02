@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -62,10 +63,10 @@ public class Ameto {
     }
 
     /**
-     * Returns a list of all pipelines.
-     * @return List of pipelines
+     * Returns a collection of all pipelines.
+     * @return Set of pipelines
      */
-    public List<de.digitalernachschub.ameto.client.Pipeline> getPipelines() {
+    public Set<Pipeline> getPipelines() {
         List<PipelineDto> pipelines = Collections.emptyList();
         try {
             Response<List<PipelineDto>> response = ameto.getPipelines().execute();
@@ -74,8 +75,8 @@ public class Ameto {
             e.printStackTrace();
         }
         return pipelines.stream()
-                .map(pipelineDto -> new de.digitalernachschub.ameto.client.Pipeline(ameto, pipelineDto.getName()))
-                .collect(Collectors.toList());
+                .map(pipelineDto -> new Pipeline(ameto, pipelineDto.getName()))
+                .collect(Collectors.toSet());
     }
 
     public Future<Asset> add(Path assetPath) {

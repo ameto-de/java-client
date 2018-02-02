@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -31,12 +32,12 @@ public class AmetoTest {
 
     @Test
     public void testAddPipelineAddsNewPipeline() {
-        List<Pipeline> pipelines = ameto.getPipelines();
+        Collection<Pipeline> pipelines = ameto.getPipelines();
         String pipelineName = "anyName";
 
         ameto.add(pipelineName, Collections.singletonList("noop"));
 
-        List<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
+        Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
         assertThat(pipelinesAfterAdd, hasItem(pipelineWithName(pipelineName)));
         assertThat(pipelinesAfterAdd.size(), is(pipelines.size() + 1));
     }
@@ -49,7 +50,7 @@ public class AmetoTest {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> ameto.add(pipelineName, Arrays.asList("noop", unknownOperatorName, "noop")))
                 .withMessageContaining(unknownOperatorName);
-        List<Pipeline> pipelines = ameto.getPipelines();
+        Collection<Pipeline> pipelines = ameto.getPipelines();
         assertThat(pipelines, not(hasItem(pipelineWithName(pipelineName))));
     }
 
