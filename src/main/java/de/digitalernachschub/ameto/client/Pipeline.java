@@ -1,6 +1,6 @@
 package de.digitalernachschub.ameto.client;
 
-import de.digitalernachschub.ameto.client.dto.Job;
+import de.digitalernachschub.ameto.client.dto.JobDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class Pipeline {
     private final String name;
 
     public Future<ProcessedAsset> push(Asset asset) {
-        Job job = new Job(asset.getId(), getName());
+        JobDto job = new JobDto(asset.getId(), getName());
         try {
             Response<String> addAssetResponse = api.add(job).execute();
             String assetUrl = addAssetResponse.body();

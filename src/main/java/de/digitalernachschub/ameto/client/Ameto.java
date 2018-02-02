@@ -1,7 +1,7 @@
 package de.digitalernachschub.ameto.client;
 
-import de.digitalernachschub.ameto.client.dto.Job;
-import de.digitalernachschub.ameto.client.dto.Pipeline;
+import de.digitalernachschub.ameto.client.dto.JobDto;
+import de.digitalernachschub.ameto.client.dto.PipelineDto;
 import lombok.val;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -47,8 +47,8 @@ public class Ameto {
     public de.digitalernachschub.ameto.client.Pipeline add(String name, List<String> steps) {
         Response<Void> response;
         try {
-            List<Pipeline.Step> steps_ = steps.stream().map(Pipeline.Step::new).collect(Collectors.toList());
-            Pipeline pipeline = new Pipeline(name, steps_);
+            List<PipelineDto.Step> steps_ = steps.stream().map(PipelineDto.Step::new).collect(Collectors.toList());
+            PipelineDto pipeline = new PipelineDto(name, steps_);
             response = ameto.add(pipeline).execute();
             if (!response.isSuccessful()) {
                 Converter<ResponseBody, AddPipelineError> errorConverter =
@@ -68,9 +68,9 @@ public class Ameto {
      * @return List of pipelines
      */
     public List<de.digitalernachschub.ameto.client.Pipeline> getPipelines() {
-        List<Pipeline> pipelines = Collections.emptyList();
+        List<PipelineDto> pipelines = Collections.emptyList();
         try {
-            Response<List<Pipeline>> response = ameto.getPipelines().execute();
+            Response<List<PipelineDto>> response = ameto.getPipelines().execute();
             pipelines = response.body();
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,7 +106,7 @@ public class Ameto {
     }
 
     public List<de.digitalernachschub.ameto.client.Job> getJobs() {
-        Response<List<Job>> response;
+        Response<List<JobDto>> response;
         try {
             response = ameto.getJobs().execute();
         } catch (IOException e) {

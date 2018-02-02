@@ -8,7 +8,7 @@ import lombok.Value;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @RequiredArgsConstructor
-public class Job {
+public class JobDto {
     private String id;
     private final String asset;
     private final String pipeline;
