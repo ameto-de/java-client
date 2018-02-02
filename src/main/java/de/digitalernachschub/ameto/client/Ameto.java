@@ -1,11 +1,11 @@
 package de.digitalernachschub.ameto.client;
 
 import lombok.val;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 import retrofit2.*;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
@@ -24,10 +24,16 @@ public class Ameto {
     private final Retrofit retrofit;
     private final AmetoApi ameto;
 
-    public Ameto(String url) {
+    public Ameto(String url, String apiToken) {
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .readTimeout(5, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
+                .addInterceptor(chain -> {
+                    Request alteredRequest = chain.request().newBuilder()
+                            .addHeader("Authorization", apiToken)
+                            .build();
+                    return chain.proceed(alteredRequest);
+                })
                 .build();
         retrofit = new Retrofit.Builder()
                 .baseUrl(url)

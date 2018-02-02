@@ -27,7 +27,7 @@ public class AmetoTest {
     @Before
     public void setUp() {
         String apiUrl = System.getenv().getOrDefault("AMETO_API_URL", "http://localhost:9100");
-        ameto = new Ameto(apiUrl);
+        ameto = new Ameto(apiUrl, "anyToken");
     }
 
     @Test
