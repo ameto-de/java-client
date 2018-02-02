@@ -67,7 +67,7 @@ public class Ameto {
      * Returns a list of all pipelines.
      * @return List of pipelines
      */
-    public List<String> getPipelines() {
+    public List<de.digitalernachschub.ameto.client.Pipeline> getPipelines() {
         List<Pipeline> pipelines = Collections.emptyList();
         try {
             Response<List<Pipeline>> response = ameto.getPipelines().execute();
@@ -75,7 +75,9 @@ public class Ameto {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return pipelines.stream().map(Pipeline::getName).collect(Collectors.toList());
+        return pipelines.stream()
+                .map(pipelineDto -> new de.digitalernachschub.ameto.client.Pipeline(ameto, pipelineDto.getName()))
+                .collect(Collectors.toList());
     }
 
     public Future<Asset> add(Path assetPath) {

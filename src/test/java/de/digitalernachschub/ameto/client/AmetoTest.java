@@ -1,6 +1,9 @@
 package de.digitalernachschub.ameto.client;
 
 import lombok.val;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,13 +31,13 @@ public class AmetoTest {
 
     @Test
     public void testAddPipelineAddsNewPipeline() {
-        List<String> pipelines = ameto.getPipelines();
+        List<Pipeline> pipelines = ameto.getPipelines();
         String pipelineName = "anyName";
 
         ameto.add(pipelineName, Collections.singletonList("noop"));
 
-        List<String> pipelinesAfterAdd = ameto.getPipelines();
-        assertThat(pipelinesAfterAdd, hasItem(pipelineName));
+        List<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
+        assertThat(pipelinesAfterAdd, hasItem(pipelineWithName(pipelineName)));
         assertThat(pipelinesAfterAdd.size(), is(pipelines.size() + 1));
     }
 
@@ -46,8 +49,8 @@ public class AmetoTest {
         assertThatExceptionOfType(RuntimeException.class)
                 .isThrownBy(() -> ameto.add(pipelineName, Arrays.asList("noop", unknownOperatorName, "noop")))
                 .withMessageContaining(unknownOperatorName);
-        List<String> pipelines = ameto.getPipelines();
-        assertThat(pipelines, not(hasItem(pipelineName)));
+        List<Pipeline> pipelines = ameto.getPipelines();
+        assertThat(pipelines, not(hasItem(pipelineWithName(pipelineName))));
     }
 
     @Test
@@ -87,5 +90,20 @@ public class AmetoTest {
 
         byte[] imageBytes = Files.readAllBytes(Paths.get("src/test/resources/flower.jpg"));
         assertArrayEquals(imageBytes, processedAsset.get().getEssence());
+    }
+
+    private static Matcher<Pipeline> pipelineWithName(String name) {
+        return new TypeSafeDiagnosingMatcher<Pipeline>() {
+            @Override
+            protected boolean matchesSafely(Pipeline item, Description mismatchDescription) {
+                mismatchDescription.appendText("Pipeline identified by ").appendText(name);
+                return name.equals(item.getName());
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Pipeline identified by ").appendText(name);
+            }
+        };
     }
 }
