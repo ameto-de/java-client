@@ -8,7 +8,7 @@ setup_test_env() {
     sleep 10
     local project_name=$(basename $(pwd))
     local network_name=${project_name//-/}_default
-    python3.6 -m ametoctl package noop-operator.toml | docker run --interactive --network=${network_name} --rm dev.digitalernachschub.de/ameto/ametoctl --broker kafka:9092 add -
+    python3.6 -m ametoctl operators package noop-operator.toml | docker run --interactive --network=${network_name} --rm dev.digitalernachschub.de/ameto/ametoctl:0.4.0 --broker kafka:9092 operators add -
 }
 
 run_tests() {
