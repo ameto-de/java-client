@@ -73,12 +73,13 @@ public class Ameto {
      * @return Set of pipelines
      */
     public Set<Pipeline> getPipelines() {
-        List<PipelineDto> pipelines = Collections.emptyList();
+        List<PipelineDto> pipelines;
         try {
             Response<List<PipelineDto>> response = ameto.getPipelines().execute();
             pipelines = response.body();
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return pipelines.stream()
                 .map(pipelineDto -> new Pipeline(ameto, pipelineDto.getName()))
