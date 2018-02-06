@@ -30,7 +30,7 @@ public class Ameto {
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .addInterceptor(chain -> {
                     Request alteredRequest = chain.request().newBuilder()
-                            .addHeader("Authorization", apiToken)
+                            .addHeader("Authorization", "Bearer "+apiToken)
                             .build();
                     return chain.proceed(alteredRequest);
                 })
