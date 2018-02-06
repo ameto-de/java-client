@@ -76,6 +76,12 @@ public class Ameto {
         List<PipelineDto> pipelines;
         try {
             Response<List<PipelineDto>> response = ameto.getPipelines().execute();
+            if (!response.isSuccessful()) {
+                Converter<ResponseBody, AddPipelineError> errorConverter =
+                        retrofit.responseBodyConverter(AddPipelineError.class, new Annotation[0]);
+                AddPipelineError error = errorConverter.convert(response.errorBody());
+                throw new RuntimeException(error.getError());
+            }
             pipelines = response.body();
         } catch (IOException e) {
             e.printStackTrace();
