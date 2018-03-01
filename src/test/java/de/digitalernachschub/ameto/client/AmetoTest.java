@@ -87,6 +87,7 @@ public class AmetoTest {
         Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList("noop"));
         Future<Asset> uploadResult = ameto.add(Paths.get("src/test/resources/flower.jpg"));
         Asset asset = uploadResult.get();
+        Thread.sleep(5000L);
 
         Future<ProcessedAsset> processedAsset = pipeline.push(asset);
 
