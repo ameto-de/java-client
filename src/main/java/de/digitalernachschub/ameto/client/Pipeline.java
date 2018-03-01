@@ -39,8 +39,12 @@ public class Pipeline {
                 @Override
                 public void onResponse(Call call, okhttp3.Response response) throws IOException {
                     String assetId = new URL(assetUrl).getPath();
-                    ProcessedAsset processedAsset = new ProcessedAsset(assetId, response.body().bytes());
-                    result.complete(processedAsset);
+                    if (!response.isSuccessful()) {
+                        result.completeExceptionally(new AmetoException(response.message()));
+                    } else {
+                        ProcessedAsset processedAsset = new ProcessedAsset(assetId, response.body().bytes());
+                        result.complete(processedAsset);
+                    }
                 }
             };
             http.newCall(getProcessedAsset).enqueue(processAssetCallback);
