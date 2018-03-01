@@ -5,11 +5,12 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 import java.util.List;
 
 interface AmetoApi {
-    @POST("/pipeline")
+    @PUT("/pipeline")
     Call<Void> add(@Body PipelineDto pipeline);
     @GET("/pipeline")
     Call<List<PipelineDto>> getPipelines();
