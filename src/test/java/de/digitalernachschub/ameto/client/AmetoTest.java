@@ -62,9 +62,8 @@ public class AmetoTest {
 
     @Test
     public void testAddAssetReturnsWithoutError() throws ExecutionException, InterruptedException {
-        val assetFuture = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+        val asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
 
-        val asset = assetFuture.get();
         assertNotNull(asset);
     }
 
@@ -85,8 +84,7 @@ public class AmetoTest {
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
         Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList("noop"));
-        Future<Asset> uploadResult = ameto.add(Paths.get("src/test/resources/flower.jpg"));
-        Asset asset = uploadResult.get();
+        Asset asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
         Thread.sleep(5000L);
 
         Future<ProcessedAsset> processedAsset = pipeline.push(asset);

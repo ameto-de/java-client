@@ -92,25 +92,13 @@ public class Ameto {
                 .collect(Collectors.toSet());
     }
 
-    public Future<Asset> add(Path assetPath) {
+    public Asset add(Path assetPath) {
         try {
             byte[] assetContent = Files.readAllBytes(assetPath);
             RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), assetContent);
-            CompletableFuture<Asset> result = new CompletableFuture<>();
-            Callback<AddAssetResponse> addAssetCallback = new Callback<AddAssetResponse>() {
-                @Override
-                public void onResponse(Call<AddAssetResponse> call, Response<AddAssetResponse> response) {
-                    val asset = new Asset(response.body().getId());
-                    result.complete(asset);
-                }
-
-                @Override
-                public void onFailure(Call<AddAssetResponse> call, Throwable t) {
-                    result.completeExceptionally(t);
-                }
-            };
-            ameto.add(body).enqueue(addAssetCallback);
-            return result;
+            Response<AddAssetResponse> response = ameto.add(body).execute();
+            val asset = new Asset(response.body().getId());
+            return asset;
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Unable to upload asset data to ameto.", e);
