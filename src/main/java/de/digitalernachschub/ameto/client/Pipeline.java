@@ -20,35 +20,21 @@ public class Pipeline {
     @Getter
     private final String name;
 
-    public Future<ProcessedAsset> push(Asset asset) {
+    public ProcessedAsset push(Asset asset) {
         JobDto job = new JobDto(asset.getId(), getName());
         try {
             Response<String> addAssetResponse = api.add(job).execute();
             String assetUrl = addAssetResponse.body();
-            OkHttpClient http = new OkHttpClient();
             Request getProcessedAsset = new Request.Builder()
                     .url(assetUrl)
                     .build();
-            CompletableFuture<ProcessedAsset> result = new CompletableFuture<>();
-            Callback processAssetCallback = new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    result.completeExceptionally(e);
-                }
-
-                @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                    String assetId = new URL(assetUrl).getPath();
-                    if (!response.isSuccessful()) {
-                        result.completeExceptionally(new AmetoException(response.message()));
-                    } else {
-                        ProcessedAsset processedAsset = new ProcessedAsset(assetId, response.body().bytes());
-                        result.complete(processedAsset);
-                    }
-                }
-            };
-            http.newCall(getProcessedAsset).enqueue(processAssetCallback);
-            return result;
+            OkHttpClient http = new OkHttpClient();
+            okhttp3.Response response = http.newCall(getProcessedAsset).execute();
+            String assetId = new URL(assetUrl).getPath();
+            if (!response.isSuccessful()) {
+                throw new AmetoException(response.message());
+            }
+            return new ProcessedAsset(assetId, response.body().bytes());
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

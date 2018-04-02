@@ -87,10 +87,10 @@ public class AmetoTest {
         Asset asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
         Thread.sleep(5000L);
 
-        Future<ProcessedAsset> processedAsset = pipeline.push(asset);
+        ProcessedAsset processedAsset = pipeline.push(asset);
 
         byte[] imageBytes = Files.readAllBytes(Paths.get("src/test/resources/flower.jpg"));
-        assertArrayEquals(imageBytes, processedAsset.get().getEssence());
+        assertArrayEquals(imageBytes, processedAsset.getEssence());
     }
 
     private static Matcher<Pipeline> pipelineWithName(String name) {
