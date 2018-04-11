@@ -17,6 +17,7 @@ services:
       KAFKA_HOST_NAME: kafka
       KAFKA_MESSAGE_MAX_BYTES: 262144000
       KAFKA_SOCKET_REQUEST_MAX_BYTES: 262144000
+      KAFKA_CREATE_TOPICS: testUser.api_tokens:1:1,testUser.uploaded:1:1,testUser.jobs:1:1,testUser.pipelines:1:1,testUser.processed:1:1,operators:1:1
     ports:
       - "9094:9094"
   api:
