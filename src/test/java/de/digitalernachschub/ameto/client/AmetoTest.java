@@ -85,7 +85,6 @@ public class AmetoTest {
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
         Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList("noop"));
         Asset asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
-        Thread.sleep(10000L);
 
         ProcessedAsset processedAsset = pipeline.push(asset);
 
