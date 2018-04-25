@@ -94,16 +94,16 @@ public class Ameto {
 
     /**
      * Returns Assets that have been uploaded to Ameto.
-     * Note that the returned collections may not include very recently uploaded items.
+     * Note that the returned collection may not include very recently uploaded items.
      * @return Assets available to Ameto
+     * @throws AmetoException if the asset list could not be retrieved
      */
     public Set<Asset> getAssets() {
         Response<List<String>> assetIds;
         try {
             assetIds = ameto.getAssets().execute();
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Unable to retrieve assets from Ameto.", e);
+            throw new AmetoException("Unable to retrieve assets from Ameto.", e);
         }
         return assetIds.body().stream()
                 .map(Asset::new)
