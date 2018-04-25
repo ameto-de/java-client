@@ -92,6 +92,24 @@ public class Ameto {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Returns Assets that have been uploaded to Ameto.
+     * Note that the returned collections may not include very recently uploaded items.
+     * @return Assets available to Ameto
+     */
+    public Set<Asset> getAssets() {
+        Response<List<String>> assetIds;
+        try {
+            assetIds = ameto.getAssets().execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Unable to retrieve assets from Ameto.", e);
+        }
+        return assetIds.body().stream()
+                .map(Asset::new)
+                .collect(Collectors.toSet());
+    }
+
     public Asset add(Path assetPath) {
         try {
             byte[] assetContent = Files.readAllBytes(assetPath);

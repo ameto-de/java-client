@@ -1,6 +1,7 @@
 package de.digitalernachschub.ameto.client;
 
 import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -10,10 +11,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -61,10 +59,12 @@ public class AmetoTest {
     }
 
     @Test
-    public void testAddAssetReturnsWithoutError() throws ExecutionException, InterruptedException {
-        val asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+    public void addedAssetEventuallyAppearsInAssetList() throws Exception {
+        Asset asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
 
-        assertNotNull(asset);
+        Thread.sleep(3000L);
+        Set<Asset> assetsAfterUpload = ameto.getAssets();
+        Assertions.assertThat(assetsAfterUpload).contains(asset);
     }
 
     @Test
