@@ -105,6 +105,10 @@ public class Ameto {
         } catch (IOException e) {
             throw new AmetoException("Unable to retrieve assets from Ameto.", e);
         }
+        if (!assetIds.isSuccessful() || assetIds.body() == null) {
+            throw new AmetoException("Unsuccessful response from Ameto. This is either a bug in Ameto or you " +
+                    "are using this client with an incompatible version of Ameto (e.g. wrong API version).");
+        }
         return assetIds.body().stream()
                 .map(Asset::new)
                 .collect(Collectors.toSet());
