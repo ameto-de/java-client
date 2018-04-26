@@ -29,11 +29,24 @@ public class Pipeline {
                     .url(assetUrl)
                     .build();
             OkHttpClient http = new OkHttpClient();
-            okhttp3.Response response = http.newCall(getProcessedAsset).execute();
-            String assetId = new URL(assetUrl).getPath();
+            int retries = 3;
+            long retryBackoff = 3000L;
+            okhttp3.Response response = null;
+            for (int attempt = 0; attempt < retries; attempt++) {
+                response = http.newCall(getProcessedAsset).execute();
+                if (response.isSuccessful()) {
+                    break;
+                }
+                try {
+                    Thread.sleep(retryBackoff);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             if (!response.isSuccessful()) {
                 throw new AmetoException(response.message());
             }
+            String assetId = new URL(assetUrl).getPath();
             return new ProcessedAsset(assetId, response.body().bytes());
         } catch (IOException e) {
             e.printStackTrace();
