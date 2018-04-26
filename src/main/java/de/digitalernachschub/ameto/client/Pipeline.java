@@ -46,7 +46,8 @@ public class Pipeline {
             if (!response.isSuccessful()) {
                 throw new AmetoException(response.message());
             }
-            String assetId = new URL(assetUrl).getPath();
+            String[] assetPath = new URL(assetUrl).getPath().split("/");
+            String assetId = assetPath[assetPath.length - 1];
             return new ProcessedAsset(assetId, response.body().bytes());
         } catch (IOException e) {
             e.printStackTrace();
