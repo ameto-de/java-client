@@ -33,6 +33,9 @@ public class Pipeline {
             long retryBackoff = 5000L;
             okhttp3.Response response = null;
             for (int attempt = 0; attempt < retries; attempt++) {
+                if (response != null) {
+                    response.close();
+                }
                 response = http.newCall(getProcessedAsset).execute();
                 if (response.isSuccessful()) {
                     break;
@@ -44,11 +47,15 @@ public class Pipeline {
                 }
             }
             if (!response.isSuccessful()) {
-                throw new AmetoException(response.message());
+                String message = response.message();
+                response.close();
+                throw new AmetoException(message);
             }
             String[] assetPath = new URL(assetUrl).getPath().split("/");
             String assetId = assetPath[assetPath.length - 1];
-            return new ProcessedAsset(assetId, response.body().bytes());
+            ProcessedAsset processedAsset = new ProcessedAsset(assetId, response.body().bytes());
+            response.close();
+            return processedAsset;
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
