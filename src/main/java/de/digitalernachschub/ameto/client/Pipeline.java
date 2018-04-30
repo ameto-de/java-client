@@ -30,7 +30,7 @@ public class Pipeline {
                     .build();
             OkHttpClient http = new OkHttpClient();
             int retries = 3;
-            long retryBackoff = 3000L;
+            long retryBackoff = 5000L;
             okhttp3.Response response = null;
             for (int attempt = 0; attempt < retries; attempt++) {
                 response = http.newCall(getProcessedAsset).execute();
