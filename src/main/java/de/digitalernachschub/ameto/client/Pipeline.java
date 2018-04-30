@@ -3,16 +3,12 @@ package de.digitalernachschub.ameto.client;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Response;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class Pipeline {
