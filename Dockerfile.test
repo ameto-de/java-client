@@ -3,4 +3,4 @@ COPY settings.gradle settings.gradle
 COPY build.gradle build.gradle
 COPY src src
 
-CMD ["gradle", "--no-daemon", "--stacktrace", "test"]
+CMD ["gradle", "--no-daemon", "--stacktrace", "integrationTest"]
