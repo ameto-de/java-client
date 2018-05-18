@@ -58,7 +58,7 @@ public class AmetoTest {
 
     @Test
     public void addedAssetEventuallyAppearsInAssetList() throws Exception {
-        Asset asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+        Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         Thread.sleep(3000L);
         Set<Asset> assetsAfterUpload = ameto.getAssets();
@@ -82,11 +82,11 @@ public class AmetoTest {
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
         Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList("noop"));
-        Asset asset = ameto.add(Paths.get("src/test/resources/flower.jpg"));
+        Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
 
-        byte[] imageBytes = Files.readAllBytes(Paths.get("src/test/resources/flower.jpg"));
+        byte[] imageBytes = Files.readAllBytes(Paths.get("src/integration/resources/flower.jpg"));
         assertArrayEquals(imageBytes, processedAsset.getEssence());
     }
 
