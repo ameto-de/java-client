@@ -9,6 +9,8 @@ import retrofit2.Response;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class Pipeline {
@@ -28,13 +30,13 @@ public class Pipeline {
             OkHttpClient http = new OkHttpClient();
             int retries = 3;
             long retryBackoff = 5000L;
-            okhttp3.Response response = null;
             for (int attempt = 0; attempt < retries; attempt++) {
-                if (response != null) {
-                    response.close();
-                }
-                response = http.newCall(getProcessedAsset).execute();
-                if (response.isSuccessful()) {
+                Response<List<JobDto>> jobsResponse = api.getJobs().execute();
+                Optional<JobDto> currentJob = jobsResponse.body().stream()
+                        .filter(j -> j.getId().equals(job.getId()))
+                        .findAny();
+                int finishedJobStatus = 2;
+                if (currentJob.isPresent() && currentJob.get().getStatus() == finishedJobStatus) {
                     break;
                 }
                 try {
@@ -43,15 +45,16 @@ public class Pipeline {
                     e.printStackTrace();
                 }
             }
-            if (!response.isSuccessful()) {
-                String message = response.message();
-                response.close();
+            okhttp3.Response fetchResultResponse = http.newCall(getProcessedAsset).execute();
+            if (!fetchResultResponse.isSuccessful()) {
+                String message = fetchResultResponse.message();
+                fetchResultResponse.close();
                 throw new AmetoException(message);
             }
             String[] assetPath = new URL(assetUrl).getPath().split("/");
             String assetId = assetPath[assetPath.length - 1];
-            ProcessedAsset processedAsset = new ProcessedAsset(assetId, response.body().bytes());
-            response.close();
+            ProcessedAsset processedAsset = new ProcessedAsset(assetId, fetchResultResponse.body().bytes());
+            fetchResultResponse.close();
             return processedAsset;
         } catch (IOException e) {
             e.printStackTrace();
