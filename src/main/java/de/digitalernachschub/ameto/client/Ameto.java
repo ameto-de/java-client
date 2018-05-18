@@ -138,8 +138,23 @@ public class Ameto {
         val jobs = response.body();
         return jobs.stream()
                 .map(job -> new de.digitalernachschub.ameto.client.Job(
-                        job.getId(), job.getAsset(), job.getPipeline()))
+                        job.getId(), job.getAsset(), job.getPipeline(), jobStatus(job.getStatus())))
                 .collect(Collectors.toList());
+    }
+
+    public Job.Status jobStatus(int status) {
+        switch (status) {
+            case 0:
+                return Job.Status.Pending;
+            case 1:
+                return Job.Status.InProgress;
+            case 2:
+                return Job.Status.Finished;
+            case 3:
+                return Job.Status.Failed;
+            default:
+                throw new IllegalArgumentException("Unknown job status: " + status);
+        }
     }
 
     public List<Operator> getOperators() {

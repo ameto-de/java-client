@@ -10,4 +10,12 @@ public class Job {
     String id;
     String asset;
     String pipeline;
+    Status status;
+
+    public enum Status {
+        Pending,
+        InProgress,
+        Finished,
+        Failed
+    }
 }

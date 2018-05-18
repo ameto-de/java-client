@@ -12,4 +12,5 @@ class JobDto {
     private String id;
     private final String asset;
     private final String pipeline;
+    private final int status;
 }

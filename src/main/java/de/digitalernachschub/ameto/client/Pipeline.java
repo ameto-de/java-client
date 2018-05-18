@@ -17,7 +17,8 @@ public class Pipeline {
     private final String name;
 
     public ProcessedAsset push(Asset asset) {
-        JobDto job = new JobDto(asset.getId(), getName());
+        int pendingJobStatus = 0;
+        JobDto job = new JobDto(asset.getId(), getName(), pendingJobStatus);
         try {
             Response<String> addAssetResponse = api.add(job).execute();
             String assetUrl = addAssetResponse.body();
