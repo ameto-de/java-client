@@ -14,6 +14,20 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    integration {
+        java.srcDir file('src/integration/java')
+        resources.srcDir file('src/integration/resources')
+        compileClasspath += sourceSets.main.output + configurations.testRuntime
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+configurations {
+    integrationImplementation.extendsFrom implementation
+    integrationImplementation.extendsFrom testImplementation
+}
+
 dependencies {
     compile('com.squareup.retrofit2:retrofit:2.3.0')
     compile('com.squareup.retrofit2:converter-jackson:2.3.0')
@@ -27,3 +41,14 @@ dependencies {
 test {
     testLogging {exceptionFormat = 'full'}
 }
+
+task integrationTest(type: Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath = sourceSets.integration.runtimeClasspath
+    mustRunAfter test
+}
+
+check.dependsOn integrationTest
