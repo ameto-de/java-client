@@ -21,6 +21,11 @@ sourceSets {
         compileClasspath += sourceSets.main.output + configurations.testRuntime
         runtimeClasspath += output + compileClasspath
     }
+
+    // IntelliJ Workaround
+    test {
+        java.srcDir file('src/integration/java')
+    }
 }
 
 configurations {
