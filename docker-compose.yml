@@ -30,16 +30,29 @@ services:
       KAFKA_CREATE_TOPICS: testUser.api_tokens:1:1,testUser.uploaded:1:1,testUser.jobs:1:1,testUser.pipelines:1:1,testUser.processed:1:1,operators:1:1
     ports:
       - "9094:9094"
+  object-store:
+    image: minio/minio
+    command: server /data
+    environment:
+      MINIO_ACCESS_KEY: accessKey1
+      MINIO_SECRET_KEY: verySecretKey1
+    ports:
+      - "9000:9000"
   api:
     image: dev.digitalernachschub.de/ameto/api
     depends_on:
       - 'kafka'
+      - 'object-store'
     ports:
       - "9100:5000"
     environment:
       - AMETO_KAFKA_BROKERS=kafka:9092
       - AMETO_API_BIND_ADDRESS=0.0.0.0
       - AMETO_DELIVERY_URL=http://localhost:9200/
+      - AMETO_OBJECT_STORE=object-store:9000
+      - AMETO_OBJECT_STORE_ACCESS_KEY=accessKey1
+      - AMETO_OBJECT_STORE_SECRET_KEY=verySecretKey1
+      - AMETO_OBJECT_STORE_USE_TLS=false
   dispatcher:
     image: dev.digitalernachschub.de/ameto/dispatcher
     depends_on:
