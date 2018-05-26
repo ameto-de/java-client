@@ -145,7 +145,7 @@ public class Ameto {
                 .collect(Collectors.toList());
     }
 
-    public Job.Status jobStatus(int status) {
+    private Job.Status jobStatus(int status) {
         switch (status) {
             case 0:
                 return Job.Status.Pending;
