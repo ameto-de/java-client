@@ -173,11 +173,15 @@ public class Ameto {
      * @throws AmetoException if the Ameto API cannot be reached
      */
     public List<Operator> getOperators() {
+        Response<List<Operator>> response;
         try {
-            Response<List<Operator>> response = ameto.getOperators().execute();
-            return response.body();
+            response = ameto.getOperators().execute();
         } catch (IOException e) {
             throw new AmetoException("Unable to query operators from Ameto API.", e);
         }
+        if (response.body() == null) {
+            throw new AmetoException("Invalid response from Ameto API.");
+        }
+        return response.body();
     }
 }
