@@ -71,6 +71,7 @@ public class Ameto {
     /**
      * Returns a collection of all pipelines.
      * @return Set of pipelines
+     * @throws AmetoException if communication with the API was not possible or the response returned an error.
      */
     public Set<Pipeline> getPipelines() {
         List<PipelineDto> pipelines;
@@ -80,11 +81,11 @@ public class Ameto {
                 Converter<ResponseBody, AddPipelineError> errorConverter =
                         retrofit.responseBodyConverter(AddPipelineError.class, new Annotation[0]);
                 AddPipelineError error = errorConverter.convert(response.errorBody());
-                throw new RuntimeException(error.getError());
+                throw new AmetoException(error.getError());
             }
             pipelines = response.body();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new AmetoException("Unable to send pipeline reuqest to the Ameto API server", e);
         }
         return pipelines.stream()
                 .map(pipelineDto -> new Pipeline(ameto, pipelineDto.getName()))
