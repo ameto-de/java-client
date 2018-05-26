@@ -133,12 +133,17 @@ public class Ameto {
         }
     }
 
+    /**
+     * Returns a list of all jobs.
+     * @return job list
+     * @throws AmetoException if the request could not be sent
+     */
     public List<de.digitalernachschub.ameto.client.Job> getJobs() {
         Response<List<JobDto>> response;
         try {
             response = ameto.getJobs().execute();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new AmetoException("Unable to send job request to Ameto API.", e);
         }
         val jobs = response.body();
         return jobs.stream()
