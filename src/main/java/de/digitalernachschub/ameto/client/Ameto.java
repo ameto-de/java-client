@@ -123,7 +123,7 @@ public class Ameto {
             return asset;
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("Unable to upload asset data to ameto.", e);
+            throw new AmetoException("Unable to upload asset data to ameto.", e);
         }
     }
 
