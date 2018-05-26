@@ -48,6 +48,7 @@ public class Ameto {
      * If a pipeline with the specified name already exists, it will be overwritten.
      * @param name Pipeline name
      * @param steps Processing steps
+     * @throws AmetoException if communication with the API was not possible or the response returned an error.
      */
     public de.digitalernachschub.ameto.client.Pipeline add(String name, List<String> steps) {
         Response<Void> response;
@@ -59,10 +60,10 @@ public class Ameto {
                 Converter<ResponseBody, AddPipelineError> errorConverter =
                         retrofit.responseBodyConverter(AddPipelineError.class, new Annotation[0]);
                 AddPipelineError error = errorConverter.convert(response.errorBody());
-                throw new RuntimeException(error.getError());
+                throw new AmetoException(error.getError());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new AmetoException("Unable to send pipeline request to the Ameto API server", e);
         }
         return new de.digitalernachschub.ameto.client.Pipeline(ameto, name);
     }
