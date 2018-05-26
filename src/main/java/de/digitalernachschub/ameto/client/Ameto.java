@@ -167,13 +167,17 @@ public class Ameto {
         }
     }
 
+    /**
+     * Returns all available pipeline operators.
+     * @return List of operators
+     * @throws AmetoException if the Ameto API cannot be reached
+     */
     public List<Operator> getOperators() {
         try {
             Response<List<Operator>> response = ameto.getOperators().execute();
             return response.body();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new AmetoException("Unable to query operators from Ameto API.", e);
         }
-        return Collections.emptyList();
     }
 }
