@@ -114,6 +114,11 @@ public class Ameto {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Uploads the asset under the specified path.
+     * @param assetPath Path to asset file
+     * @throws AmetoException if an error occurs during asset upload
+     */
     public Asset add(Path assetPath) {
         try {
             byte[] assetContent = Files.readAllBytes(assetPath);
