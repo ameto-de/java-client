@@ -124,8 +124,10 @@ public class Ameto {
             byte[] assetContent = Files.readAllBytes(assetPath);
             RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), assetContent);
             Response<AddAssetResponse> response = ameto.add(body).execute();
-            val asset = new Asset(response.body().getId());
-            return asset;
+            if (!response.isSuccessful() || response.body() == null) {
+                throw new AmetoException("Received error response from Ameto API");
+            }
+            return new Asset(response.body().getId());
         } catch (IOException e) {
             e.printStackTrace();
             throw new AmetoException("Unable to upload asset data to ameto.", e);
