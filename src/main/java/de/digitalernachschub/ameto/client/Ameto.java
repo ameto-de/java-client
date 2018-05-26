@@ -62,7 +62,6 @@ public class Ameto {
                 throw new RuntimeException(error.getError());
             }
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return new de.digitalernachschub.ameto.client.Pipeline(ameto, name);
@@ -84,7 +83,6 @@ public class Ameto {
             }
             pipelines = response.body();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return pipelines.stream()
@@ -129,7 +127,6 @@ public class Ameto {
             }
             return new Asset(response.body().getId());
         } catch (IOException e) {
-            e.printStackTrace();
             throw new AmetoException("Unable to upload asset data to ameto.", e);
         }
     }
@@ -139,7 +136,6 @@ public class Ameto {
         try {
             response = ameto.getJobs().execute();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
         val jobs = response.body();
