@@ -71,6 +71,10 @@ services:
     environment:
       - AMETO_KAFKA_BROKERS=kafka:9092
       - AMETO_EXPORTER_DIR=/var/lib/ameto/exporter
+      - AMETO_OBJECT_STORE=object-store:9000
+      - AMETO_OBJECT_STORE_ACCESS_KEY=accessKey1
+      - AMETO_OBJECT_STORE_SECRET_KEY=verySecretKey1
+      - AMETO_OBJECT_STORE_USE_TLS=false
   delivery:
     image: nginx
     volumes:
