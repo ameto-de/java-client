@@ -33,7 +33,8 @@ public class Pipeline {
             for (int attempt = 0; attempt < retries; attempt++) {
                 Response<List<JobDto>> jobsResponse = api.getJobs().execute();
                 Optional<JobDto> currentJob = jobsResponse.body().stream()
-                        .filter(j -> j.getId().equals(job.getId()))
+                        .filter(j -> j.getAsset().equals(job.getAsset()))
+                        .filter(j -> j.getPipeline().equals(job.getPipeline()))
                         .findAny();
                 int finishedJobStatus = 2;
                 if (currentJob.isPresent() && currentJob.get().getStatus() == finishedJobStatus) {
