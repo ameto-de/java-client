@@ -14,7 +14,7 @@ setup_test_env() {
     docker-compose -f docker-compose.ci.yml up -d api
     sleep 5
     ametoctl operators package noop-operator.toml | docker run --interactive --network=${network_name} \
-        --rm dev.digitalernachschub.de/ameto/ametoctl:0.8.0 --api-url http://api:5000 \
+        --rm dev.digitalernachschub.de/ameto/ametoctl:0.8.0 --api-url http://delivery:80 \
         --api-token ${api_token} \
         operators add -
     docker-compose -f docker-compose.ci.yml up -d
@@ -24,7 +24,7 @@ setup_test_env() {
 run_tests() {
     local project_name=$(basename $(pwd))
     local network_name=${project_name}_default
-    docker run --network=${network_name} --env AMETO_API_URL=http://api:5000 --env AMETO_API_TOKEN=${AMETO_API_TOKEN} \
+    docker run --network=${network_name} --env AMETO_API_URL=http://delivery:80 --env AMETO_API_TOKEN=${AMETO_API_TOKEN} \
       --mount type=volume,source=${project_name}_gradle_cache,target=/home/gradle/.gradle --rm ameto/java-client-tests
 }
 
