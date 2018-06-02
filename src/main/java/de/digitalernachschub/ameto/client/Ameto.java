@@ -3,8 +3,6 @@ package de.digitalernachschub.ameto.client;
 import lombok.val;
 import okhttp3.*;
 import retrofit2.*;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -15,8 +13,6 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -87,9 +83,9 @@ public class Ameto {
         } catch (IOException e) {
             throw new AmetoException("Unable to send pipeline reuqest to the Ameto API server", e);
         }
-        return pipelines.stream()
+        return Collections.unmodifiableSet(pipelines.stream()
                 .map(pipelineDto -> new Pipeline(ameto, pipelineDto.getName()))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet()));
     }
 
     /**
@@ -109,9 +105,9 @@ public class Ameto {
             throw new AmetoException("Unsuccessful response from Ameto. This is either a bug in Ameto or you " +
                     "are using this client with an incompatible version of Ameto (e.g. wrong API version).");
         }
-        return assetIds.body().stream()
+        return Collections.unmodifiableSet(assetIds.body().stream()
                 .map(Asset::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet()));
     }
 
     /**
@@ -146,10 +142,10 @@ public class Ameto {
             throw new AmetoException("Unable to send job request to Ameto API.", e);
         }
         val jobs = response.body();
-        return jobs.stream()
+        return Collections.unmodifiableList(jobs.stream()
                 .map(job -> new de.digitalernachschub.ameto.client.Job(
                         job.getId(), job.getAsset(), job.getPipeline(), jobStatus(job.getStatus())))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     private Job.Status jobStatus(int status) {
@@ -182,6 +178,6 @@ public class Ameto {
         if (response.body() == null) {
             throw new AmetoException("Invalid response from Ameto API.");
         }
-        return response.body();
+        return Collections.unmodifiableList(response.body());
     }
 }
