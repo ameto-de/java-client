@@ -8,12 +8,12 @@ setup_test_env() {
     sleep 10
     local project_name=$(basename $(pwd))
     local network_name=${project_name}_default
-    python3.6 -m ametoctl operators package noop-operator.toml | docker run --interactive --network=${network_name} \
-        --rm dev.digitalernachschub.de/ameto/ametoctl:0.7.1 --broker kafka:9092 \
-        --object-store object-store:9000 --object-store-access-key accessKey1 --object-store-secret-key verySecretKey1 \
-        --object-store-no-tls operators add -
-    local api_token=$(docker run --interactive --network=${network_name} --rm dev.digitalernachschub.de/ameto/ametoctl:0.7.1 --broker kafka:9092 users add_token testuser)
+    local api_token=$(docker run --interactive --network=${network_name} --rm dev.digitalernachschub.de/ameto/ametoctl:0.8.0 --broker kafka:9092 users add_token testuser admin)
     export AMETO_API_TOKEN=${api_token}
+    python3.6 -m ametoctl operators package noop-operator.toml | docker run --interactive --network=${network_name} \
+        --rm dev.digitalernachschub.de/ameto/ametoctl:0.8.0 --api-url http://api:5000 \
+        --api-token ${api_token} \
+        operators add -
 }
 
 run_tests() {

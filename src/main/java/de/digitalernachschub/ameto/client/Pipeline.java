@@ -3,8 +3,7 @@ package de.digitalernachschub.ameto.client;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 import java.io.IOException;
@@ -20,14 +19,8 @@ public class Pipeline {
 
     public ProcessedAsset push(Asset asset) {
         int pendingJobStatus = 0;
-        JobDto job = new JobDto(asset.getId(), getName(), pendingJobStatus);
+        JobDto job = new JobDto(asset.getId(), getName(), pendingJobStatus, null);
         try {
-            Response<String> addAssetResponse = api.add(job).execute();
-            String assetUrl = addAssetResponse.body();
-            Request getProcessedAsset = new Request.Builder()
-                    .url(assetUrl)
-                    .build();
-            OkHttpClient http = new OkHttpClient();
             int retries = 3;
             long retryBackoff = 5000L;
             for (int attempt = 0; attempt < retries; attempt++) {
@@ -46,17 +39,16 @@ public class Pipeline {
                     e.printStackTrace();
                 }
             }
-            okhttp3.Response fetchResultResponse = http.newCall(getProcessedAsset).execute();
-            if (!fetchResultResponse.isSuccessful()) {
-                String message = fetchResultResponse.message();
-                fetchResultResponse.close();
-                throw new AmetoException(message);
+            Response<String> addJobResponse = api.add(job).execute();
+            String jobUrl = addJobResponse.body();
+            String[] jobPath = new URL(jobUrl).getPath().split("/");
+            String jobId = jobPath[jobPath.length - 1];
+            Response<JobDto> getJobResponse = api.getJob(jobId).execute();
+            if (!getJobResponse.isSuccessful()) {
+                throw new AmetoException(getJobResponse.errorBody().string());
             }
-            String[] assetPath = new URL(assetUrl).getPath().split("/");
-            String assetId = assetPath[assetPath.length - 1];
-            ProcessedAsset processedAsset = new ProcessedAsset(assetId, fetchResultResponse.body().bytes());
-            fetchResultResponse.close();
-            return processedAsset;
+            Response<ResponseBody> jobResult = api.getResult(jobId).execute();
+            return new ProcessedAsset(jobId, jobResult.body().bytes());
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

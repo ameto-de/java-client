@@ -48,7 +48,7 @@ services:
     environment:
       - AMETO_KAFKA_BROKERS=kafka:9092
       - AMETO_API_BIND_ADDRESS=0.0.0.0
-      - AMETO_DELIVERY_URL=http://localhost:9200/
+      - AMETO_ADVERTISED_URL=http://localhost:9200
       - AMETO_OBJECT_STORE=object-store:9000
       - AMETO_OBJECT_STORE_ACCESS_KEY=accessKey1
       - AMETO_OBJECT_STORE_SECRET_KEY=verySecretKey1
@@ -86,12 +86,15 @@ services:
       - AMETO_OBJECT_STORE_USE_TLS=false
   delivery:
     image: nginx
+    depends_on:
+      - 'api'
+      - 'object-store'
     ports:
       - "9200:80"
     volumes:
-      - type: volume
-        source: ameto_exporter
-        target: /usr/share/nginx/html
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
         read_only: true
 
 volumes:

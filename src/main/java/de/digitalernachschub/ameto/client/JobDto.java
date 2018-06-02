@@ -3,7 +3,8 @@ package de.digitalernachschub.ameto.client;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+
+import java.net.URL;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -13,4 +14,5 @@ class JobDto {
     private final String asset;
     private final String pipeline;
     private final int status;
+    private final URL resultUrl;
 }
