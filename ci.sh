@@ -2,18 +2,20 @@
 set -e
 
 setup_test_env() {
-    docker-compose -f docker-compose.ci.yml up -d kafka
-    sleep 10
-    docker-compose -f docker-compose.ci.yml up -d
+    docker-compose -f docker-compose.ci.yml up -d kafka object-store
     sleep 10
     local project_name=$(basename $(pwd))
     local network_name=${project_name}_default
     local api_token=$(docker run --interactive --network=${network_name} --rm dev.digitalernachschub.de/ameto/ametoctl:0.8.0 --broker kafka:9092 users add_token testuser admin)
     export AMETO_API_TOKEN=${api_token}
+    docker-compose -f docker-compose.ci.yml up -d api
+    sleep 5
     python3.6 -m ametoctl operators package noop-operator.toml | docker run --interactive --network=${network_name} \
         --rm dev.digitalernachschub.de/ameto/ametoctl:0.8.0 --api-url http://api:5000 \
         --api-token ${api_token} \
         operators add -
+    docker-compose -f docker-compose.ci.yml up -d
+    sleep 5
 }
 
 run_tests() {
