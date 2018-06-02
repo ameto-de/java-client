@@ -27,8 +27,14 @@ run_tests() {
 }
 
 tear_down_test_env() {
-    echo "API logs"
+    echo "####################"
+    echo "# API service logs #"
+    echo "####################"
     docker-compose -f docker-compose.ci.yml logs api
+    echo "####################"
+    echo "# API gateway logs #"
+    echo "####################"
+    docker-compose -f docker-compose.ci.yml logs delivery
     docker-compose -f docker-compose.ci.yml down
 }
 
