@@ -13,7 +13,7 @@ setup_test_env() {
     export AMETO_API_TOKEN=${api_token}
     docker-compose -f docker-compose.ci.yml up -d api
     sleep 5
-    python3.6 -m ametoctl operators package noop-operator.toml | docker run --interactive --network=${network_name} \
+    ametoctl operators package noop-operator.toml | docker run --interactive --network=${network_name} \
         --rm dev.digitalernachschub.de/ameto/ametoctl:0.8.0 --api-url http://api:5000 \
         --api-token ${api_token} \
         operators add -
