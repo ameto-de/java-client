@@ -48,7 +48,7 @@ public class Pipeline {
                 throw new AmetoException(getJobResponse.errorBody().string());
             }
             Response<ResponseBody> jobResult = api.getResult(jobId).execute();
-            return new ProcessedAsset(jobId, jobResult.body().bytes());
+            return new ProcessedAsset(jobId, jobResult.body().byteStream());
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

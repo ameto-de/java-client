@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -15,7 +16,8 @@ import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class AmetoTest {
     private static Ameto ameto;
@@ -86,8 +88,8 @@ public class AmetoTest {
 
         ProcessedAsset processedAsset = pipeline.push(asset);
 
-        byte[] imageBytes = Files.readAllBytes(Paths.get("src/integration/resources/flower.jpg"));
-        assertArrayEquals(imageBytes, processedAsset.getEssence());
+        InputStream imageBytes = Files.newInputStream(Paths.get("src/integration/resources/flower.jpg"));
+        Assertions.assertThat(processedAsset.getEssence()).hasSameContentAs(imageBytes);
     }
 
     private static Matcher<Pipeline> pipelineWithName(String name) {
