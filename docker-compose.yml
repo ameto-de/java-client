@@ -25,8 +25,6 @@ services:
       KAFKA_ADVERTISED_PORT: 9094
       KAFKA_PROTOCOL_NAME: INTERNAL
       KAFKA_HOST_NAME: kafka
-      KAFKA_MESSAGE_MAX_BYTES: 26214400
-      KAFKA_SOCKET_REQUEST_MAX_BYTES: 26214400
       KAFKA_CREATE_TOPICS: testuser.api_tokens:1:1,testuser.uploaded:1:1,testuser.jobs:1:1,testuser.pipelines:1:1,testuser.processed:1:1,operators:1:1
     ports:
       - "9094:9094"
