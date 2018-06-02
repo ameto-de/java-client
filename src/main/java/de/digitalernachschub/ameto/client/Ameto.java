@@ -2,14 +2,17 @@ package de.digitalernachschub.ameto.client;
 
 import lombok.val;
 import okhttp3.*;
-import retrofit2.*;
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Source;
+import retrofit2.Converter;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -111,14 +114,25 @@ public class Ameto {
     }
 
     /**
-     * Uploads the asset under the specified path.
-     * @param assetPath Path to asset file
+     * Uploads the specified asset content.
+     * @param assetContent Binary content of the asset
      * @throws AmetoException if an error occurs during asset upload
      */
-    public Asset add(Path assetPath) {
+    public Asset add(InputStream assetContent) {
         try {
-            byte[] assetContent = Files.readAllBytes(assetPath);
-            RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), assetContent);
+            RequestBody body = new RequestBody() {
+                @Override
+                public MediaType contentType() {
+                    return MediaType.parse("application/octet-stream");
+                }
+
+                @Override
+                public void writeTo(BufferedSink sink) throws IOException {
+                    try (Source source = Okio.source(assetContent)) {
+                        sink.writeAll(source);
+                    }
+                }
+            };
             Response<AddAssetResponse> response = ameto.add(body).execute();
             if (!response.isSuccessful() || response.body() == null) {
                 throw new AmetoException("Received error response from Ameto API");
