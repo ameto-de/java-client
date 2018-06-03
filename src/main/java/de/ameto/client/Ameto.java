@@ -1,4 +1,4 @@
-package de.digitalernachschub.ameto.client;
+package de.ameto.client;
 
 import lombok.val;
 import okhttp3.*;
@@ -49,7 +49,7 @@ public class Ameto {
      * @param steps Processing steps
      * @throws AmetoException if communication with the API was not possible or the response returned an error.
      */
-    public de.digitalernachschub.ameto.client.Pipeline add(String name, List<String> steps) {
+    public Pipeline add(String name, List<String> steps) {
         Response<Void> response;
         try {
             List<PipelineDto.Step> steps_ = steps.stream().map(PipelineDto.Step::new).collect(Collectors.toList());
@@ -64,7 +64,7 @@ public class Ameto {
         } catch (IOException e) {
             throw new AmetoException("Unable to send pipeline request to the Ameto API server", e);
         }
-        return new de.digitalernachschub.ameto.client.Pipeline(ameto, name);
+        return new Pipeline(ameto, name);
     }
 
     /**
@@ -148,7 +148,7 @@ public class Ameto {
      * @return job list
      * @throws AmetoException if the request could not be sent
      */
-    public List<de.digitalernachschub.ameto.client.Job> getJobs() {
+    public List<Job> getJobs() {
         Response<List<JobDto>> response;
         try {
             response = ameto.getJobs().execute();
@@ -157,7 +157,7 @@ public class Ameto {
         }
         val jobs = response.body();
         return Collections.unmodifiableList(jobs.stream()
-                .map(job -> new de.digitalernachschub.ameto.client.Job(
+                .map(job -> new Job(
                         job.getId(), job.getAsset(), job.getPipeline(), jobStatus(job.getStatus())))
                 .collect(Collectors.toList()));
     }

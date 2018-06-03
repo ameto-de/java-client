@@ -1,6 +1,4 @@
-package de.digitalernachschub.ameto.client;
-
-import lombok.RequiredArgsConstructor;
+package de.ameto.client;
 
 /**
  * Base class for all exceptions thrown by the Ameto client.

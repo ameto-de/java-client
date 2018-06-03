@@ -6,7 +6,7 @@ apply {
     plugin("java")
 }
 
-group = "de.digitalernachschub.ameto"
+group = "de.ameto"
 version = "1.0-SNAPSHOT"
 sourceCompatibility = JavaVersion.VERSION_1_8
 

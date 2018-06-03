@@ -1,4 +1,4 @@
-package de.digitalernachschub.ameto.client;
+package de.ameto.client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;

@@ -1,4 +1,4 @@
-package de.digitalernachschub.ameto.client;
+package de.ameto.client;
 
 import lombok.AccessLevel;
 import lombok.Getter;

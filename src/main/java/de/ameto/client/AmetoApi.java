@@ -1,4 +1,4 @@
-package de.digitalernachschub.ameto.client;
+package de.ameto.client;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;

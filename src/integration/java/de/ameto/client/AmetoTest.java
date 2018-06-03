@@ -1,4 +1,4 @@
-package de.digitalernachschub.ameto.client;
+package de.ameto.client;
 
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Description;
