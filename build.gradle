@@ -57,3 +57,10 @@ task integrationTest(type: Test) {
 }
 
 check.dependsOn integrationTest
+
+
+jar {
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
