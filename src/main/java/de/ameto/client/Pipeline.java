@@ -1,5 +1,6 @@
 package de.ameto.client;
 
+import de.ameto.client.operators.Operator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import retrofit2.Response;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
@@ -15,6 +17,8 @@ public class Pipeline {
     private final AmetoApi api;
     @Getter
     private final String name;
+    @Getter
+    private final List<Operator> steps;
 
     public ProcessedAsset push(Asset asset) {
         int pendingJobStatus = 0;

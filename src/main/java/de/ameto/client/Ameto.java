@@ -14,9 +14,13 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Ameto {
     private final Retrofit retrofit;
@@ -50,13 +54,15 @@ public class Ameto {
      * @throws AmetoException if communication with the API was not possible or the response returned an error.
      */
     public Pipeline add(String name, Operator firstOperator, Operator... operators) {
+        List<Operator> allOperators = Stream.concat(
+                Stream.of(firstOperator),
+                Arrays.stream(operators)
+        ).collect(Collectors.toList());
         Response<Void> response;
         try {
-            List<PipelineDto.Step> steps_ = new ArrayList<>(1 + operators.length);
-            steps_.add(new PipelineDto.Step(firstOperator.getName()));
-            steps_.addAll(Arrays.stream(operators)
+            List<PipelineDto.Step> steps_ = allOperators.stream()
                     .map(operator -> new PipelineDto.Step(operator.getName()))
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toList());
             PipelineDto pipeline = new PipelineDto(name, steps_);
             response = ameto.add(pipeline).execute();
             if (!response.isSuccessful()) {
@@ -68,7 +74,7 @@ public class Ameto {
         } catch (IOException e) {
             throw new AmetoException("Unable to send pipeline request to the Ameto API server", e);
         }
-        return new Pipeline(ameto, name);
+        return new Pipeline(ameto, name, allOperators);
     }
 
     /**
@@ -91,8 +97,23 @@ public class Ameto {
             throw new AmetoException("Unable to send pipeline reuqest to the Ameto API server", e);
         }
         return Collections.unmodifiableSet(pipelines.stream()
-                .map(pipelineDto -> new Pipeline(ameto, pipelineDto.getName()))
+                .map(pipelineDto -> new Pipeline(ameto, pipelineDto.getName(),
+                        pipelineDto.getSteps().stream().map(Ameto::fromStep).collect(Collectors.toList())))
                 .collect(Collectors.toSet()));
+    }
+
+    private static Operator fromStep(PipelineDto.Step step) {
+        return new Operator() {
+            @Override
+            public String getName() {
+                return step.getOperator();
+            }
+
+            @Override
+            public List<String> getConsumes() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     /**
