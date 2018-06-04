@@ -1,5 +1,6 @@
 package de.ameto.client;
 
+import de.ameto.client.operators.Operator;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

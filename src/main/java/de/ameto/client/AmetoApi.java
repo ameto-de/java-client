@@ -23,7 +23,7 @@ interface AmetoApi {
     @POST("/job")
     Call<String> add(@Body JobDto job);
     @GET("/operator")
-    Call<List<Operator>> getOperators();
+    Call<List<OperatorDto>> getOperators();
     @GET("/processed/{jobId}")
     Call<ResponseBody> getResult(@Path("jobId") String jobId);
 }

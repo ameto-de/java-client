@@ -1,5 +1,6 @@
 package de.ameto.client;
 
+import de.ameto.client.operators.Operator;
 import lombok.val;
 import okhttp3.*;
 import okio.BufferedSink;
@@ -183,7 +184,7 @@ public class Ameto {
      * @throws AmetoException if the Ameto API cannot be reached
      */
     public List<Operator> getOperators() {
-        Response<List<Operator>> response;
+        Response<List<OperatorDto>> response;
         try {
             response = ameto.getOperators().execute();
         } catch (IOException e) {
@@ -192,6 +193,19 @@ public class Ameto {
         if (response.body() == null) {
             throw new AmetoException("Invalid response from Ameto API.");
         }
-        return Collections.unmodifiableList(response.body());
+        return Collections.unmodifiableList(
+                response.body().stream()
+                        .map(dto -> new Operator() {
+                            @Override
+                            public String getName() {
+                                return dto.getName();
+                            }
+
+                            @Override
+                            public List<String> getConsumes() {
+                                return dto.getConsumes();
+                            }
+                        }).collect(Collectors.toList())
+        );
     }
 }

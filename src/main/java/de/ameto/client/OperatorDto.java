@@ -8,7 +8,7 @@ import java.util.List;
  * Describes a processing step in a pipeline.
  */
 @Value
-public class Operator {
+public class OperatorDto {
     String name;
     List<String> consumes;
 }
