@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -47,7 +49,7 @@ public class AmetoTest {
         Collection<Pipeline> pipelines = ameto.getPipelines();
         String pipelineName = "anyName";
 
-        ameto.add(pipelineName, Collections.singletonList(noopOperator));
+        ameto.add(pipelineName, noopOperator);
 
         Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
         assertThat(pipelinesAfterAdd, hasItem(pipelineWithName(pipelineName)));
@@ -70,7 +72,7 @@ public class AmetoTest {
         };
 
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> ameto.add(pipelineName, Arrays.asList(noopOperator, unknownOperator, noopOperator)))
+                .isThrownBy(() -> ameto.add(pipelineName, noopOperator, unknownOperator, noopOperator))
                 .withMessageContaining(unknownOperator.getName());
         Collection<Pipeline> pipelines = ameto.getPipelines();
         assertThat(pipelines, not(hasItem(pipelineWithName(pipelineName))));
@@ -99,7 +101,7 @@ public class AmetoTest {
 
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
-        Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList(noopOperator));
+        Pipeline pipeline = ameto.add("jpegTestPipeline", noopOperator);
         Asset asset = ameto.add(Files.newInputStream(Paths.get("src/integration/resources/flower.jpg")));
 
         ProcessedAsset processedAsset = pipeline.push(asset);

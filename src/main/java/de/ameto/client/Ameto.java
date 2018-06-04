@@ -14,9 +14,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -47,15 +45,18 @@ public class Ameto {
      * Adds the specified pipeline to ameto.
      * If a pipeline with the specified name already exists, it will be overwritten.
      * @param name Pipeline name
-     * @param steps Processing steps
+     * @param firstOperator First processing step
+     * @param operators Subsequent processing steps
      * @throws AmetoException if communication with the API was not possible or the response returned an error.
      */
-    public Pipeline add(String name, List<Operator> steps) {
+    public Pipeline add(String name, Operator firstOperator, Operator... operators) {
         Response<Void> response;
         try {
-            List<PipelineDto.Step> steps_ = steps.stream()
+            List<PipelineDto.Step> steps_ = new ArrayList<>(1 + operators.length);
+            steps_.add(new PipelineDto.Step(firstOperator.getName()));
+            steps_.addAll(Arrays.stream(operators)
                     .map(operator -> new PipelineDto.Step(operator.getName()))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
             PipelineDto pipeline = new PipelineDto(name, steps_);
             response = ameto.add(pipeline).execute();
             if (!response.isSuccessful()) {
