@@ -22,12 +22,24 @@ import static org.junit.Assert.assertThat;
 
 public class AmetoTest {
     private static Ameto ameto;
+    private static Operator noopOperator;
 
     @Before
     public void setUp() {
         String apiUrl = System.getenv().getOrDefault("AMETO_API_URL", "http://localhost:9200");
         String apiToken = System.getenv().getOrDefault("AMETO_API_TOKEN", "anyToken");
         ameto = new Ameto(apiUrl, apiToken);
+        noopOperator = new Operator() {
+            @Override
+            public String getName() {
+                return "noop";
+            }
+
+            @Override
+            public List<String> getConsumes() {
+                return null;
+            }
+        };
     }
 
     @Test
@@ -35,7 +47,7 @@ public class AmetoTest {
         Collection<Pipeline> pipelines = ameto.getPipelines();
         String pipelineName = "anyName";
 
-        ameto.add(pipelineName, Collections.singletonList("noop"));
+        ameto.add(pipelineName, Collections.singletonList(noopOperator));
 
         Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
         assertThat(pipelinesAfterAdd, hasItem(pipelineWithName(pipelineName)));
@@ -45,11 +57,21 @@ public class AmetoTest {
     @Test
     public void testAddPipelineThrowsExceptionWhenOperatorIsUnknown() {
         String pipelineName = "anyName2";
-        String unknownOperatorName = "unknownOperator";
+        Operator unknownOperator = new Operator() {
+            @Override
+            public String getName() {
+                return "unknownOperator";
+            }
+
+            @Override
+            public List<String> getConsumes() {
+                return null;
+            }
+        };
 
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> ameto.add(pipelineName, Arrays.asList("noop", unknownOperatorName, "noop")))
-                .withMessageContaining(unknownOperatorName);
+                .isThrownBy(() -> ameto.add(pipelineName, Arrays.asList(noopOperator, unknownOperator, noopOperator)))
+                .withMessageContaining(unknownOperator.getName());
         Collection<Pipeline> pipelines = ameto.getPipelines();
         assertThat(pipelines, not(hasItem(pipelineWithName(pipelineName))));
     }
@@ -84,7 +106,7 @@ public class AmetoTest {
 
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
-        Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList("noop"));
+        Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList(noopOperator));
         Asset asset = ameto.add(Files.newInputStream(Paths.get("src/integration/resources/flower.jpg")));
 
         ProcessedAsset processedAsset = pipeline.push(asset);

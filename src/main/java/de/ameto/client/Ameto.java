@@ -50,10 +50,12 @@ public class Ameto {
      * @param steps Processing steps
      * @throws AmetoException if communication with the API was not possible or the response returned an error.
      */
-    public Pipeline add(String name, List<String> steps) {
+    public Pipeline add(String name, List<Operator> steps) {
         Response<Void> response;
         try {
-            List<PipelineDto.Step> steps_ = steps.stream().map(PipelineDto.Step::new).collect(Collectors.toList());
+            List<PipelineDto.Step> steps_ = steps.stream()
+                    .map(operator -> new PipelineDto.Step(operator.getName()))
+                    .collect(Collectors.toList());
             PipelineDto pipeline = new PipelineDto(name, steps_);
             response = ameto.add(pipeline).execute();
             if (!response.isSuccessful()) {
