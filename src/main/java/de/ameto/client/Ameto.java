@@ -179,35 +179,4 @@ public class Ameto {
                 throw new IllegalArgumentException("Unknown job status: " + status);
         }
     }
-
-    /**
-     * Returns all available pipeline operators.
-     * @return List of operators
-     * @throws AmetoException if the Ameto API cannot be reached
-     */
-    public List<Operator> getOperators() {
-        Response<List<OperatorDto>> response;
-        try {
-            response = ameto.getOperators().execute();
-        } catch (IOException e) {
-            throw new AmetoException("Unable to query operators from Ameto API.", e);
-        }
-        if (response.body() == null) {
-            throw new AmetoException("Invalid response from Ameto API.");
-        }
-        return Collections.unmodifiableList(
-                response.body().stream()
-                        .map(dto -> new Operator() {
-                            @Override
-                            public String getName() {
-                                return dto.getName();
-                            }
-
-                            @Override
-                            public List<String> getConsumes() {
-                                return dto.getConsumes();
-                            }
-                        }).collect(Collectors.toList())
-        );
-    }
 }

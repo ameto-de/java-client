@@ -98,13 +98,6 @@ public class AmetoTest {
     }
 
     @Test
-    public void testGetOperatorsReturnsWithoutError() {
-        List<Operator> operators = ameto.getOperators();
-
-        assertNotNull(operators);
-    }
-
-    @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
         Pipeline pipeline = ameto.add("jpegTestPipeline", Collections.singletonList(noopOperator));
         Asset asset = ameto.add(Files.newInputStream(Paths.get("src/integration/resources/flower.jpg")));
