@@ -50,6 +50,10 @@ public class Pipeline {
                 throw new AmetoException(errorMessage);
             }
             Response<ResponseBody> jobResult = api.getResult(jobId).execute();
+            Optional<ResponseBody> processedAssetResponseBody = Optional.ofNullable(jobResult.body());
+            if (!processedAssetResponseBody.isPresent()) {
+                throw new AmetoException("Received empty response for processed asset " + jobId);
+            }
             return new ProcessedAsset(jobId, jobResult.body().byteStream());
         } catch (IOException e) {
             e.printStackTrace();
