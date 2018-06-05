@@ -42,7 +42,12 @@ public class Pipeline {
             }
             Response<JobDto> getJobResponse = api.getJob(jobId).execute();
             if (!getJobResponse.isSuccessful()) {
-                throw new AmetoException(getJobResponse.errorBody().string());
+                Optional<ResponseBody> errorBody = Optional.ofNullable(getJobResponse.errorBody());
+                String errorMessage = "An error occurred when fetching job information for job " + jobId;
+                if (errorBody.isPresent()) {
+                    errorMessage = errorBody.get().string();
+                }
+                throw new AmetoException(errorMessage);
             }
             Response<ResponseBody> jobResult = api.getResult(jobId).execute();
             return new ProcessedAsset(jobId, jobResult.body().byteStream());
