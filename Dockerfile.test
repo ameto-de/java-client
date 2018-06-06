@@ -1,7 +1,5 @@
 FROM gradle:4.4-jdk-alpine as gradle
-COPY settings.gradle settings.gradle
-COPY build.gradle build.gradle
-COPY src src
-COPY .git .git
+COPY --chown=gradle:gradle . project
+WORKDIR project
 
 CMD ["gradle", "--no-daemon", "--full-stacktrace", "integrationTest"]
