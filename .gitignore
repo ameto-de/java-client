@@ -1,3 +1,7 @@
+# Workaround for
+# https://github.com/palantir/gradle-git-version/issues/28#issuecomment-395034523
+.idea/
+
 .gradle/
 build/
 out/
