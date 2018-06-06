@@ -2,12 +2,12 @@ plugins {
     id 'net.ltgt.apt' version '0.10'
 }
 
-apply {
-    plugin("java")
-}
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 group = "de.ameto"
-version = "1.0-SNAPSHOT"
+version = "0.1-SNAPSHOT"
 sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
@@ -59,8 +59,62 @@ task integrationTest(type: Test) {
 check.dependsOn integrationTest
 
 
-jar {
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'Ameto client'
+                packaging 'jar'
+                description 'Client library for interacting with Ameto'
+                url 'https://www.ameto.de'
+
+                scm {
+                    connection 'scm:git:https://github.com/ameto-de/java-client.git'
+                    developerConnection 'scm:git:ssh://git@github.com/ameto-de/java-client.git'
+                    url 'https://github.com/ameto-de/java-client'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'mseifert'
+                        name 'Michael Seifert'
+                        email 'm.seifert@digitalernachschub.de'
+                    }
+                }
+            }
+        }
     }
 }
