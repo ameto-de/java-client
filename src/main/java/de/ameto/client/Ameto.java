@@ -51,6 +51,7 @@ public class Ameto {
      * @param name Pipeline name
      * @param firstOperator First processing step
      * @param operators Subsequent processing steps
+     * @return A new pipeline
      * @throws AmetoException if communication with the API was not possible or the response returned an error.
      */
     public Pipeline add(String name, Operator firstOperator, Operator... operators) {
@@ -141,6 +142,7 @@ public class Ameto {
     /**
      * Uploads the specified asset content.
      * @param assetContent Binary content of the asset
+     * @return An asset with the specified content
      * @throws AmetoException if an error occurs during asset upload
      */
     public Asset add(InputStream assetContent) {
