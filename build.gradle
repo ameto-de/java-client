@@ -78,6 +78,14 @@ signing {
     sign configurations.archives
 }
 
+// Set these properties in $GRADLE_USER_HOME/gradle.properties
+if (!project.hasProperty('ossrhUsername')) {
+    ext.ossrhUsername = 'myOSSRHUsername'
+}
+if (!project.hasProperty('ossrhPassword')) {
+    ext.ossrhPassword = 'myOSSRHPassword'
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
