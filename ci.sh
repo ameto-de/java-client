@@ -26,6 +26,13 @@ run_tests() {
       --mount type=volume,source=${project_name}_gradle_cache,target=/home/gradle/.gradle --rm ameto/java-client-tests
 }
 
+deploy_release() {
+    docker run --mount type=bind,source=${HOME}/.gradle/gradle.properties,target=/home/gradle/.gradle/gradle.properties,ro \
+        --mount type=bind,source=${HOME}/.gnupg/ameto-releng-secring.gpg,target=/home/gradle/.gnupg/ameto-releng-secring.gpg \
+        --mount type=bind,source=${PWD},target=/home/gradle/project -w /home/gradle/project \
+        --rm gradle:4.4-jre-alpine gradle --no-daemon uploadArchives
+}
+
 tear_down_test_env() {
     echo "####################"
     echo "# API service logs #"
@@ -43,3 +50,8 @@ docker build -f Dockerfile.test -t ameto/java-client-tests .
 trap tear_down_test_env EXIT
 setup_test_env
 run_tests
+
+version=$(git describe --tags --always --dirty --match client-*)
+if [[ $(git tag --list client-${version}) ]]; then
+    deploy_release
+fi
