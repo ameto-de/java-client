@@ -8,7 +8,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,10 +61,10 @@ public class Pipeline {
     }
 
     private String submitJob(JobDto job) throws IOException {
-        Response<String> addJobResponse = api.add(job).execute();
-        String jobUrl = addJobResponse.body();
-        String[] jobPath = new URL(jobUrl).getPath().split("/");
-        String jobId = jobPath[jobPath.length - 1];
-        return jobId;
+        Response<JobDto> addJobResponse = api.add(job).execute();
+        Optional<JobDto> jobResponse = Optional.ofNullable(addJobResponse.body());
+        return jobResponse
+                .orElseThrow(() -> new AmetoException("Job submission returned empty response"))
+                .getId();
     }
 }
