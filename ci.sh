@@ -9,8 +9,10 @@ setup_test_env() {
     docker run --interactive --network=${network_name} \
         --env AMETO_DEFAULT_USER_TOPICS=jobs:1:1,pipelines:1:1,uploaded:1:1,api_tokens:1:1,processed:1:1 \
         --rm dev.digitalernachschub.de/ameto/ametoctl:0.8.0 --broker kafka:9092 users add testuser
+    sleep 10
     local api_token=$(docker run --interactive --network=${network_name} --rm dev.digitalernachschub.de/ameto/ametoctl:0.8.0 --broker kafka:9092 users add_token testuser admin)
     export AMETO_API_TOKEN=${api_token}
+    sleep 10
     docker-compose -f docker-compose.ci.yml up -d
     sleep 10
     ametoctl operators package noop-operator.toml | docker run --interactive --network=${network_name} \
