@@ -9,7 +9,6 @@ setup_test_env() {
     docker-compose -f docker-compose.ci.yml up -d
     sleep 10
     docker run --interactive --network=${network_name} \
-        --env AMETO_DEFAULT_USER_TOPICS=jobs:1:1,pipelines:1:1,uploaded:1:1,api_tokens:1:1,processed:1:1 \
         --rm dev.digitalernachschub.de/ameto/ametoctl:0.9.0 --api-url http://delivery:80 --api-token V4l1dAdm1nT0ken \
         users add testuser
     sleep 10
