@@ -49,6 +49,10 @@ public class Pipeline {
                 throw new AmetoException(errorMessage);
             }
             Response<ResponseBody> jobResult = api.getResult(jobId).execute();
+            if (!jobResult.isSuccessful()) {
+                throw new AmetoException("Your job result could not be retrieved. " +
+                        "It is possible that Ameto is experiencing a lot of traffic. Please try again later.");
+            }
             Optional<ResponseBody> processedAssetResponseBody = Optional.ofNullable(jobResult.body());
             if (!processedAssetResponseBody.isPresent()) {
                 throw new AmetoException("Received empty response for processed asset " + jobId);
