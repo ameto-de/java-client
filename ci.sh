@@ -3,11 +3,11 @@ set -e
 
 setup_test_env() {
     docker-compose -f docker-compose.ci.yml up -d kafka object-store
-    sleep 10
+    sleep 20
     local project_name=$(basename $(pwd))
     local network_name=${project_name}_default
     docker-compose -f docker-compose.ci.yml up -d
-    sleep 10
+    sleep 20
     docker run --interactive --network=${network_name} \
         --rm dev.digitalernachschub.de/ameto/ametoctl:0.9.0 --api-url http://delivery:80 --api-token V4l1dAdm1nT0ken \
         users add testuser
