@@ -61,6 +61,8 @@ services:
     depends_on:
       - 'kafka'
       - 'object-store'
+    ports:
+      - "9110:8080"
     volumes:
       - type: bind
         source: /run/docker.sock
