@@ -74,6 +74,7 @@ services:
       - AMETO_OBJECT_STORE_ACCESS_KEY=accessKey1
       - AMETO_OBJECT_STORE_SECRET_KEY=verySecretKey1
       - AMETO_OBJECT_STORE_USE_TLS=false
+      - AMETO_DISPATCHER_MAX_CONSISTENCY_LAG=1000
   delivery:
     image: nginx
     depends_on:
