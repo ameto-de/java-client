@@ -22,7 +22,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT
       KAFKA_PROTOCOL_NAME: INTERNAL
       KAFKA_HOST_NAME: kafka
-      KAFKA_CREATE_TOPICS: operators:1:1
+      KAFKA_CREATE_TOPICS: api_tokens:1:1,assets:1:1,jobs:1:1,operators:1:1,pipelines:1:1,processed:1:1
   object-store:
     image: minio/minio
     command: server /data
