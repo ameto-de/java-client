@@ -1,6 +1,7 @@
 plugins {
     id 'net.ltgt.apt' version '0.10'
-    id "com.palantir.git-version" version "0.12.0-rc2"
+    id 'com.palantir.git-version' version '0.12.0-rc2'
+    id 'io.codearte.nexus-staging' version '0.11.0'
 }
 
 apply plugin: 'java'
@@ -128,4 +129,11 @@ uploadArchives {
             }
         }
     }
+}
+
+nexusStaging {
+    username = ossrhUsername
+    password = ossrhPassword
+    packageGroup = group
+    stagingProfileId = '4c28b3fdc51b9f'
 }
