@@ -45,11 +45,12 @@ public class AmetoTest {
     }
 
     @Test
-    public void testAddPipelineAddsNewPipeline() {
+    public void testAddPipelineAddsNewPipeline() throws Exception {
         Collection<Pipeline> pipelines = ameto.getPipelines();
         String pipelineName = "anyName";
 
         ameto.add(pipelineName, noopOperator);
+        Thread.sleep(500L);
 
         Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
         assertThat(pipelinesAfterAdd, hasItem(pipelineWithName(pipelineName)));
