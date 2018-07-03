@@ -31,7 +31,7 @@ run_tests() {
 deploy_release() {
     docker run --mount type=bind,source=${HOME}/.gradle/gradle.properties,target=/home/gradle/.gradle/gradle.properties,ro \
         --mount type=bind,source=${HOME}/.gnupg/ameto-releng-secring.gpg,target=/home/gradle/.gnupg/ameto-releng-secring.gpg \
-        --rm ameto/java-client-tests gradle --no-daemon uploadArchives
+        --rm ameto/java-client-tests gradle --no-daemon uploadArchives closeAndReleaseRepository
 }
 
 tear_down_test_env() {
