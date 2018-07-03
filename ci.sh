@@ -7,16 +7,17 @@ setup_test_env() {
     local project_name=$(basename $(pwd))
     local network_name=${project_name}_default
     docker-compose -f docker-compose.ci.yml up -d
+    local ametoctl="dev.digitalernachschub.de/ameto/ametoctl:0.10.0"
     sleep 30
-    docker run --interactive --network=${network_name} \
-        --rm dev.digitalernachschub.de/ameto/ametoctl:0.9.0 --api-url http://delivery:80 --api-token V4l1dAdm1nT0ken \
-        users add testuser
+    local user_id=$(docker run --interactive --network=${network_name} \
+        --rm ${ametoctl} --api-url http://delivery:80 --api-token V4l1dAdm1nT0ken \
+        users add testuser)
     sleep 10
-    local api_token=$(docker run --interactive --network=${network_name} --rm dev.digitalernachschub.de/ameto/ametoctl:0.9.0 --api-url http://delivery:80 --api-token V4l1dAdm1nT0ken users add_token testuser user)
+    local api_token=$(docker run --interactive --network=${network_name} --rm ${ametoctl} --api-url http://delivery:80 \
+        --api-token V4l1dAdm1nT0ken users add_token ${user_id} user)
     export AMETO_API_TOKEN=${api_token}
     ametoctl operators package noop-operator.toml | docker run --interactive --network=${network_name} \
-        --rm dev.digitalernachschub.de/ameto/ametoctl:0.9.0 --api-url http://delivery:80 \
-        --api-token V4l1dAdm1nT0ken \
+        --rm ${ametoctl} --api-url http://delivery:80 --api-token V4l1dAdm1nT0ken \
         operators add -
 }
 
