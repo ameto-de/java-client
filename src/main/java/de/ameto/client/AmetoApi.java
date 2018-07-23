@@ -10,8 +10,9 @@ import java.util.List;
 interface AmetoApi {
     @GET("/asset")
     Call<List<String>> getAssets();
+    @Multipart
     @POST("/asset")
-    Call<AddAssetResponse> add(@Body RequestBody asset);
+    Call<AddAssetResponse> add(@Part("essence") RequestBody asset);
     @GET("/pipeline")
     Call<List<PipelineDto>> getPipelines();
     @PUT("/pipeline")
