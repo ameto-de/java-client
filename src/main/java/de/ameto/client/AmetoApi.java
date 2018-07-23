@@ -14,6 +14,8 @@ interface AmetoApi {
     @Multipart
     @POST("/asset")
     Call<AddAssetResponse> add(@Part MultipartBody.Part asset);
+    @DELETE("/asset/{assetId}")
+    Call<Void> remove(@Path("assetId") String assetId);
     @GET("/pipeline")
     Call<List<PipelineDto>> getPipelines();
     @PUT("/pipeline")

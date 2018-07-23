@@ -94,6 +94,18 @@ public class AmetoTest {
     }
 
     @Test
+    public void deletedAssetNoLongerAppearsInAssetList() throws Exception {
+        Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
+        Thread.sleep(3000L);
+
+        ameto.remove(asset);
+
+        Thread.sleep(3000L);
+        Set<Asset> assetsAfterUpload = ameto.getAssets();
+        Assertions.assertThat(assetsAfterUpload).doesNotContain(asset);
+    }
+
+    @Test
     public void getJobsReturnsWithoutError() {
         List<Job> jobs = ameto.getJobs();
 
