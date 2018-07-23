@@ -50,7 +50,7 @@ public class AmetoTest {
         String pipelineName = "anyName";
 
         ameto.add(pipelineName, noopOperator);
-        Thread.sleep(500L);
+        Thread.sleep(1000L);
 
         Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
         assertThat(pipelinesAfterAdd, hasItem(pipelineWithName(pipelineName)));
