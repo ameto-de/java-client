@@ -14,13 +14,13 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,11 +29,19 @@ public class Ameto {
     private final AmetoApi ameto;
 
     public Ameto(String url, String apiToken) {
+        String version;
+        try {
+            version = getVersionFromManifest()
+                    .orElse("dev");
+        } catch (IOException e) {
+            throw new AmetoException("Unable to determine library version.", e);
+        }
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .readTimeout(5, TimeUnit.SECONDS)
                 .writeTimeout(5, TimeUnit.SECONDS)
                 .addInterceptor(chain -> {
                     Request alteredRequest = chain.request().newBuilder()
+                            .addHeader("User-Agent", "Ameto/"+version+" (Java)")
                             .addHeader("Authorization", "Bearer "+apiToken)
                             .build();
                     return chain.proceed(alteredRequest);
@@ -45,6 +53,23 @@ public class Ameto {
                 .client(httpClient)
                 .build();
         ameto = retrofit.create(AmetoApi.class);
+    }
+
+    private Optional<String> getVersionFromManifest() throws IOException {
+        Enumeration<URL> manifests = getClass().getClassLoader().getResources("META-INF/MANIFEST.MF");
+        while (manifests.hasMoreElements()) {
+            URL manifestUrl = manifests.nextElement();
+            Manifest manifest = new Manifest(manifestUrl.openStream());
+            Attributes manifestAttributes = manifest.getMainAttributes();
+            if (!manifestAttributes.containsKey("package") || !manifestAttributes.containsKey("version")) {
+                continue;
+            }
+            String packageName = manifestAttributes.getValue("package");
+            if ("de.ameto.client".equals(packageName)) {
+                return Optional.of(manifestAttributes.getValue("version"));
+            }
+        }
+        return Optional.empty();
     }
 
     /**
