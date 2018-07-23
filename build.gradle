@@ -61,6 +61,12 @@ task integrationTest(type: Test) {
 check.dependsOn integrationTest
 
 
+jar {
+    manifest {
+        attributes('package': project.group+'.'+project.name, 'version': project.version)
+    }
+}
+
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
