@@ -162,7 +162,7 @@ public class Ameto {
             };
             Response<AddAssetResponse> response = ameto.add(body).execute();
             if (!response.isSuccessful() || response.body() == null) {
-                throw new AmetoException("Received error response from Ameto API");
+                throw new AmetoException("Received error response from Ameto API: " + response.errorBody().string());
             }
             return new Asset(response.body().getId());
         } catch (IOException e) {
