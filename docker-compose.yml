@@ -25,7 +25,7 @@ services:
       KAFKA_ADVERTISED_PORT: 9094
       KAFKA_PROTOCOL_NAME: INTERNAL
       KAFKA_HOST_NAME: kafka
-      KAFKA_CREATE_TOPICS: api_tokens:1:1,assets:1:1,jobs:1:1,operators:1:1,pipelines:1:1,processed:1:1
+      KAFKA_CREATE_TOPICS: assets:1:1,jobs:1:1,operators:1:1,pipelines:1:1,processed:1:1,tenants:1:1,users:1:1
     ports:
       - "9094:9094"
   object-store:
@@ -53,7 +53,8 @@ services:
       - AMETO_OBJECT_STORE_USE_TLS=false
       - AMETO_API_MAX_CONSISTENCY_LAG=1000
       - AMETO_API_ADMIN_USER=admin
-      - AMETO_API_ADMIN_USER_TOKEN=V4l1dAdm1nT0ken
+      - AMETO_API_ADMIN_USER_PASSWORD=V4l1dAdm1nT0ken
+      - AMETO_API_SECRET_KEY=abcd1234
   dispatcher:
     image: dev.digitalernachschub.de/ameto/dispatcher
     depends_on:
