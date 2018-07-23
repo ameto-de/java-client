@@ -14,6 +14,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -137,6 +139,16 @@ public class Ameto {
         return Collections.unmodifiableSet(assetIds.body().stream()
                 .map(Asset::new)
                 .collect(Collectors.toSet()));
+    }
+
+    public Asset add(Path file) {
+        InputStream data = null;
+        try {
+            data = Files.newInputStream(file);
+        } catch (IOException e) {
+            throw new AmetoException("Unable to add file " + file.toString(), e);
+        }
+        return add(data, file.getFileName().toString());
     }
 
     /**
