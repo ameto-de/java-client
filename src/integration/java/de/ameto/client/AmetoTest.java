@@ -86,7 +86,7 @@ public class AmetoTest {
 
     @Test
     public void addedAssetEventuallyAppearsInAssetList() throws Exception {
-        Asset asset = ameto.add(Files.newInputStream(Paths.get("src/integration/resources/flower.jpg")));
+        Asset asset = ameto.add(Files.newInputStream(Paths.get("src/integration/resources/flower.jpg")), "flower.jpg");
 
         Thread.sleep(3000L);
         Set<Asset> assetsAfterUpload = ameto.getAssets();
@@ -103,7 +103,7 @@ public class AmetoTest {
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
         Pipeline pipeline = ameto.add("jpegTestPipeline", noopOperator);
-        Asset asset = ameto.add(Files.newInputStream(Paths.get("src/integration/resources/flower.jpg")));
+        Asset asset = ameto.add(Files.newInputStream(Paths.get("src/integration/resources/flower.jpg")), "flower.jpg");
 
         ProcessedAsset processedAsset = pipeline.push(asset);
 

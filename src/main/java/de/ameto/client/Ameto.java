@@ -141,13 +141,15 @@ public class Ameto {
 
     /**
      * Uploads the specified asset content.
+     * The name parameter specifies the asset name, e.g. a file name.
      * @param assetContent Binary content of the asset
+     * @param name Name of the asset.
      * @return An asset with the specified content
      * @throws AmetoException if an error occurs during asset upload
      */
-    public Asset add(InputStream assetContent) {
+    public Asset add(InputStream assetContent, String name) {
         try {
-            RequestBody body = new RequestBody() {
+            RequestBody essenceBody = new RequestBody() {
                 @Override
                 public MediaType contentType() {
                     return MediaType.parse("application/octet-stream");
@@ -160,7 +162,8 @@ public class Ameto {
                     }
                 }
             };
-            Response<AddAssetResponse> response = ameto.add(body).execute();
+            MultipartBody.Part asset = MultipartBody.Part.createFormData("essence", name, essenceBody);
+            Response<AddAssetResponse> response = ameto.add(asset).execute();
             if (!response.isSuccessful() || response.body() == null) {
                 throw new AmetoException("Received error response from Ameto API: " + response.errorBody().string());
             }

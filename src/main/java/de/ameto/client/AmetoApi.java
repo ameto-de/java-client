@@ -1,6 +1,6 @@
 package de.ameto.client;
 
-import okhttp3.RequestBody;
+import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -12,7 +12,7 @@ interface AmetoApi {
     Call<List<String>> getAssets();
     @Multipart
     @POST("/asset")
-    Call<AddAssetResponse> add(@Part("essence") RequestBody asset);
+    Call<AddAssetResponse> add(@Part MultipartBody.Part asset);
     @GET("/pipeline")
     Call<List<PipelineDto>> getPipelines();
     @PUT("/pipeline")
