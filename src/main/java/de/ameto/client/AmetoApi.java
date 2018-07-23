@@ -8,6 +8,7 @@ import retrofit2.http.*;
 import java.util.List;
 
 interface AmetoApi {
+    @Headers({"Accept: application/json"})
     @GET("/asset")
     Call<List<String>> getAssets();
     @Multipart
