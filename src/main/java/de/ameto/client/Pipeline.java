@@ -59,8 +59,7 @@ public class Pipeline {
             }
             return new ProcessedAsset(jobId, jobResult.body().byteStream());
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new AmetoException("Failed to process asset in pipeline", e);
         }
     }
 
