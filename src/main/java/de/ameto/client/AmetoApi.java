@@ -18,7 +18,7 @@ interface AmetoApi {
     Call<Void> remove(@Path("assetId") String assetId);
     @GET("/pipeline")
     Call<List<PipelineDto>> getPipelines();
-    @PUT("/pipeline")
+    @POST("/pipeline")
     Call<Void> add(@Body PipelineDto pipeline);
     @GET("/job")
     Call<List<JobDto>> getJobs();
