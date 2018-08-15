@@ -38,6 +38,11 @@ public class AmetoTest {
             }
 
             @Override
+            public String getVersion() {
+                return "1.0.0-test";
+            }
+
+            @Override
             public List<String> getConsumes() {
                 return null;
             }
@@ -64,6 +69,11 @@ public class AmetoTest {
             @Override
             public String getName() {
                 return "unknownOperator";
+            }
+
+            @Override
+            public String getVersion() {
+                return "1.0.0-test";
             }
 
             @Override

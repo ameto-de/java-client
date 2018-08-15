@@ -7,5 +7,6 @@ import java.util.List;
  */
 public interface Operator {
     String getName();
+    String getVersion();
     List<String> getConsumes();
 }

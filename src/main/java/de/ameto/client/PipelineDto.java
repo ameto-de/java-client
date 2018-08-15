@@ -19,10 +19,12 @@ class PipelineDto {
     @RequiredArgsConstructor
     public static class Step {
         String operator;
+        String version;
         List<String> arguments;
 
-        public Step(String operator) {
+        public Step(String operator, String version) {
             this.operator = operator;
+            this.version = version;
             arguments = Collections.emptyList();
         }
     }

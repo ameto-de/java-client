@@ -89,7 +89,7 @@ public class Ameto {
         Response<Void> response;
         try {
             List<PipelineDto.Step> steps_ = allOperators.stream()
-                    .map(operator -> new PipelineDto.Step(operator.getName()))
+                    .map(operator -> new PipelineDto.Step(operator.getName(), operator.getVersion()))
                     .collect(Collectors.toList());
             PipelineDto pipeline = new PipelineDto(name, steps_);
             response = ameto.add(pipeline).execute();
@@ -135,6 +135,11 @@ public class Ameto {
             @Override
             public String getName() {
                 return step.getOperator();
+            }
+
+            @Override
+            public String getVersion() {
+                return step.getVersion();
             }
 
             @Override
