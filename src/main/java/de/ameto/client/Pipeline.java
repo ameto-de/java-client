@@ -4,6 +4,8 @@ import de.ameto.client.operators.Operator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
@@ -13,6 +15,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class Pipeline {
+    private final OkHttpClient http;
     private final AmetoApi api;
     @Getter
     private final String name;
@@ -48,16 +51,20 @@ public class Pipeline {
                 }
                 throw new AmetoException(errorMessage);
             }
-            Response<ResponseBody> jobResult = api.getResult(jobId).execute();
-            if (!jobResult.isSuccessful()) {
+            Request jobResultRequest = new Request.Builder()
+                    .get()
+                    .url(getJobResponse.body().getResultUrl())
+                    .build();
+            okhttp3.Response getJobResult = http.newCall(jobResultRequest).execute();
+            if (!getJobResult.isSuccessful()) {
                 throw new AmetoException("Your job result could not be retrieved. " +
                         "It is possible that Ameto is experiencing a lot of traffic. Please try again later.");
             }
-            Optional<ResponseBody> processedAssetResponseBody = Optional.ofNullable(jobResult.body());
+            Optional<ResponseBody> processedAssetResponseBody = Optional.ofNullable(getJobResult.body());
             if (!processedAssetResponseBody.isPresent()) {
                 throw new AmetoException("Received empty response for processed asset " + jobId);
             }
-            return new ProcessedAsset(jobId, jobResult.body().byteStream());
+            return new ProcessedAsset(jobId, getJobResult.body().byteStream());
         } catch (IOException e) {
             throw new AmetoException("Failed to process asset in pipeline", e);
         }
