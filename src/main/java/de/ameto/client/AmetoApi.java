@@ -1,7 +1,6 @@
 package de.ameto.client;
 
 import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -28,6 +27,4 @@ interface AmetoApi {
     Call<JobDto> add(@Body JobDto job);
     @GET("/operator")
     Call<List<OperatorDto>> getOperators();
-    @GET("/processed/{jobId}")
-    Call<ResponseBody> getResult(@Path("jobId") String jobId);
 }
