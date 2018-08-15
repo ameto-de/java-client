@@ -24,6 +24,7 @@ setup_test_env() {
         docker run --interactive --network=${network_name} \
             --rm ${ametoctl} --api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken \
             operators add -
+    sleep 10
 }
 
 run_tests() {
