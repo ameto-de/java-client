@@ -4,8 +4,6 @@ import de.ameto.client.operators.Operator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
@@ -15,7 +13,6 @@ import java.util.Optional;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class Pipeline {
-    private final OkHttpClient http;
     private final AmetoApi api;
     @Getter
     private final String name;
@@ -51,11 +48,7 @@ public class Pipeline {
                 }
                 throw new AmetoException(errorMessage);
             }
-            Request jobResultRequest = new Request.Builder()
-                    .get()
-                    .url(getJobResponse.body().getResultUrl())
-                    .build();
-            okhttp3.Response getJobResult = http.newCall(jobResultRequest).execute();
+            Response<ResponseBody> getJobResult = api.getAsset(getJobResponse.body().getResult()).execute();
             if (!getJobResult.isSuccessful()) {
                 throw new AmetoException("Your job result could not be retrieved. " +
                         "It is possible that Ameto is experiencing a lot of traffic. Please try again later.");

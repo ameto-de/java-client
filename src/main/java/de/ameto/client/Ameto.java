@@ -103,7 +103,7 @@ public class Ameto {
         } catch (IOException e) {
             throw new AmetoException("Unable to send pipeline request to the Ameto API server", e);
         }
-        return new Pipeline(httpClient, ameto, name, allOperators);
+        return new Pipeline(ameto, name, allOperators);
     }
 
     /**
@@ -126,7 +126,7 @@ public class Ameto {
             throw new AmetoException("Unable to send pipeline reuqest to the Ameto API server", e);
         }
         return Collections.unmodifiableSet(pipelines.stream()
-                .map(pipelineDto -> new Pipeline(httpClient, ameto, pipelineDto.getName(),
+                .map(pipelineDto -> new Pipeline(ameto, pipelineDto.getName(),
                         pipelineDto.getSteps().stream().map(Ameto::fromStep).collect(Collectors.toList())))
                 .collect(Collectors.toSet()));
     }

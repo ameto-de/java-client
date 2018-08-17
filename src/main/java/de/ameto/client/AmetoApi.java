@@ -1,6 +1,7 @@
 package de.ameto.client;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -10,6 +11,8 @@ interface AmetoApi {
     @Headers({"Accept: application/json"})
     @GET("/asset")
     Call<List<String>> getAssets();
+    @GET("/asset/{assetId}")
+    Call<ResponseBody> getAsset(@Path("assetId") String assetId);
     @Multipart
     @POST("/asset")
     Call<AddAssetResponse> add(@Part MultipartBody.Part asset);
