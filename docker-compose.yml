@@ -1,24 +1,14 @@
 version: '3.2'
 services:
-  etcd:
-    image: quay.io/coreos/etcd:v3.3
-    environment:
-      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
-      ETCD_ADVERTISE_CLIENT_URLS: "http://etcd:2379"
-  zetcd:
-    image: quay.io/coreos/zetcd:v0.0.4
-    command: --zkaddr 0.0.0.0:2181 --endpoints etcd:2379
-    ports:
-      - "2181:2181"
-    depends_on:
-      - 'etcd'
+  zookeeper:
+    image: digitalwonderland/zookeeper
   kafka:
     image: wurstmeister/kafka
     depends_on:
-      - 'zetcd'
+      - 'zookeeper'
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zetcd:2181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_ADVERTISED_PROTOCOL_NAME: EXTERNAL
       KAFKA_ADVERTISED_HOST_NAME: localhost
