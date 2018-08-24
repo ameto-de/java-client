@@ -15,13 +15,15 @@ import java.util.Optional;
 public class Pipeline {
     private final AmetoApi api;
     @Getter
+    private final String id;
+    @Getter
     private final String name;
     @Getter
     private final List<Operator> steps;
 
     public ProcessedAsset push(Asset asset) {
         int pendingJobStatus = 0;
-        JobDto job = new JobDto(asset.getId(), getName(), pendingJobStatus, null);
+        JobDto job = new JobDto(asset.getId(), getId(), pendingJobStatus, null);
         try {
             String jobId = submitJob(job);
             int retries = 3;

@@ -21,7 +21,7 @@ interface AmetoApi {
     @GET("/pipeline")
     Call<List<PipelineDto>> getPipelines();
     @POST("/pipeline")
-    Call<Void> add(@Body PipelineDto pipeline);
+    Call<PipelineDto> add(@Body PipelineDto pipeline);
     @GET("/job")
     Call<List<JobDto>> getJobs();
     @GET("/job/{jobId}")

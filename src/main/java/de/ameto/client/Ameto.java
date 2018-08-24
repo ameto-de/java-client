@@ -87,7 +87,7 @@ public class Ameto {
                 Stream.of(firstOperator),
                 Arrays.stream(operators)
         ).collect(Collectors.toList());
-        Response<Void> response;
+        Response<PipelineDto> response;
         try {
             List<PipelineDto.Step> steps_ = allOperators.stream()
                     .map(operator -> new PipelineDto.Step(operator.getName(), operator.getVersion()))
@@ -103,7 +103,8 @@ public class Ameto {
         } catch (IOException e) {
             throw new AmetoException("Unable to send pipeline request to the Ameto API server", e);
         }
-        return new Pipeline(ameto, name, allOperators);
+        String pipelineId = response.body().getId();
+        return new Pipeline(ameto, pipelineId, name, allOperators);
     }
 
     /**
@@ -126,7 +127,7 @@ public class Ameto {
             throw new AmetoException("Unable to send pipeline reuqest to the Ameto API server", e);
         }
         return Collections.unmodifiableSet(pipelines.stream()
-                .map(pipelineDto -> new Pipeline(ameto, pipelineDto.getName(),
+                .map(pipelineDto -> new Pipeline(ameto, pipelineDto.getId(), pipelineDto.getName(),
                         pipelineDto.getSteps().stream().map(Ameto::fromStep).collect(Collectors.toList())))
                 .collect(Collectors.toSet()));
     }
