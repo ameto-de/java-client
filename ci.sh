@@ -7,15 +7,16 @@ setup_test_env() {
     local project_name=$(basename $(pwd))
     local network_name=${project_name}_default
     docker-compose -f docker-compose.ci.yml up -d
-    local ametoctl="dev.digitalernachschub.de/ameto/ametoctl:0.12.0"
     sleep 30
+    local ametoctl="dev.digitalernachschub.de/ameto/ametoctl:0.12.0"
     local tenant_id=$(docker run --interactive --network=${network_name} \
         --rm ${ametoctl} --api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken \
         tenants add testtenant)
-    sleep 20
+    sleep 5
     local user_id=$(docker run --interactive --network=${network_name} \
         --rm ${ametoctl} --api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken \
         users add ${tenant_id} user)
+    sleep 5
     local api_token=$(docker run --interactive --network=${network_name} \
         --rm ${ametoctl} --api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken \
         users list --token ${tenant_id} ${user_id})
