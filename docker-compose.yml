@@ -45,25 +45,10 @@ services:
       - AMETO_API_ADMIN_USER=admin
       - AMETO_API_ADMIN_USER_PASSWORD=V4l1dAdm1nT0ken
       - AMETO_API_SECRET_KEY=abcd1234
-  dispatcher:
-    image: dev.digitalernachschub.de/ameto/dispatcher
-    depends_on:
-      - 'kafka'
-      - 'object-store'
-    ports:
-      - "9110:8080"
     volumes:
       - type: bind
         source: /run/docker.sock
         target: /var/run/docker.sock
-    environment:
-      - AMETO_KAFKA_BROKERS=kafka:9092
-      - AMETO_OPERATORS_EVENT_STORE_PATH=/var/lib/ameto/dispatcher/events
-      - AMETO_OBJECT_STORE=object-store:9000
-      - AMETO_OBJECT_STORE_ACCESS_KEY=accessKey1
-      - AMETO_OBJECT_STORE_SECRET_KEY=verySecretKey1
-      - AMETO_OBJECT_STORE_USE_TLS=false
-      - AMETO_DISPATCHER_MAX_CONSISTENCY_LAG=1000
   delivery:
     image: nginx
     depends_on:
