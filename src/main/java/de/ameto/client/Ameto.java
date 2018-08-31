@@ -38,8 +38,8 @@ public class Ameto {
             throw new AmetoException("Unable to determine library version.", e);
         }
         httpClient = new OkHttpClient.Builder()
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(5, TimeUnit.SECONDS)
+                .readTimeout(8, TimeUnit.SECONDS)
+                .writeTimeout(8, TimeUnit.SECONDS)
                 .addInterceptor(chain -> {
                     Request alteredRequest = chain.request().newBuilder()
                             .addHeader("User-Agent", "Ameto/"+version+" (Java)")
