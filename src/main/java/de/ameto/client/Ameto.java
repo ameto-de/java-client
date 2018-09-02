@@ -234,6 +234,22 @@ public class Ameto {
     }
 
     /**
+     * Removes the specified processed asset from Ameto.
+     * @param asset Processed asset to be deleted
+     */
+    public void remove(ProcessedAsset asset) {
+        Response<Void> response = null;
+        try {
+            response = ameto.remove(asset.getId()).execute();
+        } catch (IOException e) {
+            throw new AmetoException("Unable to delete asset data from Ameto.", e);
+        }
+        if (!response.isSuccessful()) {
+            throw new AmetoException("Received error response from Ameto API.");
+        }
+    }
+
+    /**
      * Returns a list of all jobs.
      * @return job list
      * @throws AmetoException if the request could not be sent
