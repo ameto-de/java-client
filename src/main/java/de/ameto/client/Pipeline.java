@@ -59,7 +59,7 @@ public class Pipeline {
             if (!processedAssetResponseBody.isPresent()) {
                 throw new AmetoException("Received empty response for processed asset " + jobId);
             }
-            return new ProcessedAsset(jobId, getJobResult.body().byteStream());
+            return new ProcessedAsset(getJobResponse.body().getAsset(), getJobResult.body().byteStream());
         } catch (IOException e) {
             throw new AmetoException("Failed to process asset in pipeline", e);
         }
