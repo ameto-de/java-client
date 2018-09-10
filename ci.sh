@@ -59,7 +59,6 @@ trap tear_down_test_env EXIT
 setup_test_env
 run_tests
 
-version=$(git describe --tags --always --dirty --match client-*)
-if [[ $(git tag --list ${version}) ]]; then
+if [[ ${AMETO_DEPLOY} ]]; then
     deploy_release
 fi
