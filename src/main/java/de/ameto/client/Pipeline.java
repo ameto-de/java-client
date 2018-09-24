@@ -50,7 +50,7 @@ public class Pipeline {
                 }
                 throw new AmetoException(errorMessage);
             }
-            Response<ResponseBody> getJobResult = api.getAsset(getJobResponse.body().getResult()).execute();
+            Response<ResponseBody> getJobResult = api.getAssetEssence(getJobResponse.body().getResult()).execute();
             if (!getJobResult.isSuccessful()) {
                 throw new AmetoException("Your job result could not be retrieved. " +
                         "It is possible that Ameto is experiencing a lot of traffic. Please try again later.");

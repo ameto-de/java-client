@@ -12,7 +12,7 @@ interface AmetoApi {
     @GET("/asset")
     Call<List<String>> getAssets();
     @GET("/asset/{assetId}")
-    Call<ResponseBody> getAsset(@Path("assetId") String assetId);
+    Call<ResponseBody> getAssetEssence(@Path("assetId") String assetId);
     @Multipart
     @POST("/asset")
     Call<AddAssetResponse> add(@Part MultipartBody.Part asset);
