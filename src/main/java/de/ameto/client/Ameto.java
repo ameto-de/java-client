@@ -169,7 +169,7 @@ public class Ameto {
                     "are using this client with an incompatible version of Ameto (e.g. wrong API version).");
         }
         return Collections.unmodifiableSet(assetIds.body().stream()
-                .map(Asset::new)
+                .map(id -> new Asset(id, ameto))
                 .collect(Collectors.toSet()));
     }
 
@@ -211,7 +211,7 @@ public class Ameto {
             if (!response.isSuccessful() || response.body() == null) {
                 throw new AmetoException("Received error response from Ameto API: " + response.errorBody().string());
             }
-            return new Asset(response.body().getId());
+            return new Asset(response.body().getId(), ameto);
         } catch (IOException e) {
             throw new AmetoException("Unable to upload asset data to ameto.", e);
         }

@@ -13,6 +13,9 @@ interface AmetoApi {
     Call<List<String>> getAssets();
     @GET("/asset/{assetId}")
     Call<ResponseBody> getAssetEssence(@Path("assetId") String assetId);
+    @Headers({"Accept: application/json"})
+    @GET("/asset/{assetId}")
+    Call<AssetMetadata> getAsset(@Path("assetId") String assetId);
     @Multipart
     @POST("/asset")
     Call<AddAssetResponse> add(@Part MultipartBody.Part asset);

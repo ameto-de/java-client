@@ -133,6 +133,20 @@ public class AmetoTest {
         Assertions.assertThat(processedAsset.getEssence()).hasSameContentAs(imageBytes);
     }
 
+    @Test
+    public void testAssetContainsProcessedAssetAsVariant() throws IOException {
+        Pipeline pipeline = ameto.add("jpegTestPipeline", noopOperator);
+        Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
+
+        ProcessedAsset processedAsset = pipeline.push(asset);
+
+        Asset originalAsset = ameto.getAssets().stream()
+                .filter(a -> a.getId().equals(asset.getId()))
+                .findAny()
+                .get();
+        Assertions.assertThat(originalAsset.getVariants()).contains(processedAsset);
+    }
+
     private static Matcher<Pipeline> pipelineWithName(String name) {
         return new TypeSafeDiagnosingMatcher<Pipeline>() {
             @Override
