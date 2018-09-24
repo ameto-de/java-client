@@ -50,7 +50,7 @@ public class Pipeline {
                 }
                 throw new AmetoException(errorMessage);
             }
-            return new ProcessedAsset(getJobResponse.body().getAsset(), api);
+            return new ProcessedAsset(getJobResponse.body().getResult(), api);
         } catch (IOException e) {
             throw new AmetoException("Failed to process asset in pipeline", e);
         }
