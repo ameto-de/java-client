@@ -29,6 +29,7 @@ public class Pipeline {
      * This method triggers a job and polls Ameto until the result is available.
      * @param asset Asset to be processed
      * @return Processed asset
+     * @throws AmetoException if the asset could not be processed
      */
     public ProcessedAsset push(Asset asset) {
         int pendingJobStatus = 0;

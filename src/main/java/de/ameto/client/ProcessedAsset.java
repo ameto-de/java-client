@@ -28,6 +28,7 @@ public class ProcessedAsset {
      * This information is retrieved lazily. If you are calling this method for the first time, a request to the
      * Ameto API will be sent to retrieve the asset essence.
      * @return Asset essence
+     * @throws AmetoException if the information could not be fetched
      */
     public InputStream getEssence() {
         if (essence == null) {

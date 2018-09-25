@@ -30,6 +30,7 @@ public class Asset {
      * This information is retrieved lazily. If you are calling this method for the first time, a request to the
      * Ameto API will be sent to retrieve the available variants.
      * @return Processed assets
+     * @throws AmetoException if the information could not be fetched
      */
     public Set<ProcessedAsset> getVariants() {
         if (variants == null) {

@@ -186,6 +186,7 @@ public class Ameto {
      * Uploads the file under the specified path to Ameto.
      * @param file File to be uploaded
      * @return Asset instance
+     * @throws AmetoException if the specified path cannot be read
      */
     public Asset add(Path file) {
         InputStream data = null;
@@ -234,6 +235,7 @@ public class Ameto {
     /**
      * Removes the specified asset from Ameto.
      * @param asset Asset to be deleted
+     * @throws AmetoException if the specified asset could not be deleted.
      */
     public void remove(Asset asset) {
         Response<Void> response = null;
@@ -250,6 +252,7 @@ public class Ameto {
     /**
      * Removes the specified processed asset from Ameto.
      * @param asset Processed asset to be deleted
+     * @throws AmetoException if the specified processed asset could not be deleted
      */
     public void remove(ProcessedAsset asset) {
         Response<Void> response = null;
