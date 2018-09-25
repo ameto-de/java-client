@@ -27,6 +27,8 @@ public class Asset {
 
     /**
      * Returns assets that were derived from this asset using a pipeline.
+     * This information is retrieved lazily. If you are calling this method for the first time, a request to the
+     * Ameto API will be sent to retrieve the available variants.
      * @return Processed assets
      */
     public Set<ProcessedAsset> getVariants() {
