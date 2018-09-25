@@ -30,7 +30,6 @@ import java.util.stream.Stream;
  * processed assets and pipelines as well as querying the jobs that have been triggered.
  */
 public class Ameto {
-    private final OkHttpClient httpClient;
     private final Retrofit retrofit;
     private final AmetoApi ameto;
 
@@ -47,13 +46,13 @@ public class Ameto {
         } catch (IOException e) {
             throw new AmetoException("Unable to determine library version.", e);
         }
-        httpClient = new OkHttpClient.Builder()
+        OkHttpClient httpClient = new OkHttpClient.Builder()
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(chain -> {
                     Request alteredRequest = chain.request().newBuilder()
-                            .addHeader("User-Agent", "Ameto/"+version+" (Java)")
-                            .addHeader("Authorization", "Bearer "+apiKey)
+                            .addHeader("User-Agent", "Ameto/" + version + " (Java)")
+                            .addHeader("Authorization", "Bearer " + apiKey)
                             .build();
                     return chain.proceed(alteredRequest);
                 })
