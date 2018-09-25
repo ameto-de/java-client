@@ -24,12 +24,22 @@ import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Represents the Ameto client.
+ * Most interaction with the Ameto API will be perfomed using an instance of this client. It allows to manage assets,
+ * processed assets and pipelines as well as querying the jobs that have been triggered.
+ */
 public class Ameto {
     private final OkHttpClient httpClient;
     private final Retrofit retrofit;
     private final AmetoApi ameto;
 
-    public Ameto(String url, String apiToken) {
+    /**
+     * Initializes an Ameto client for the specified URL using the specified API key.
+     * @param url URL to the Ameto API endpoint
+     * @param apiKey API access key from your Ameto account
+     */
+    public Ameto(String url, String apiKey) {
         String version;
         try {
             version = getVersionFromManifest()
@@ -43,7 +53,7 @@ public class Ameto {
                 .addInterceptor(chain -> {
                     Request alteredRequest = chain.request().newBuilder()
                             .addHeader("User-Agent", "Ameto/"+version+" (Java)")
-                            .addHeader("Authorization", "Bearer "+apiToken)
+                            .addHeader("Authorization", "Bearer "+apiKey)
                             .build();
                     return chain.proceed(alteredRequest);
                 })
@@ -173,6 +183,11 @@ public class Ameto {
                 .collect(Collectors.toSet()));
     }
 
+    /**
+     * Uploads the file under the specified path to Ameto.
+     * @param file File to be uploaded
+     * @return Asset instance
+     */
     public Asset add(Path file) {
         InputStream data = null;
         try {
