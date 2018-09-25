@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Represents a series of processing steps used to convert or transform assets.
+ */
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class Pipeline {
     private final AmetoApi api;
@@ -21,6 +24,12 @@ public class Pipeline {
     @Getter
     private final List<Operator> steps;
 
+    /**
+     * Applies this processing pipeline to the specified asset.
+     * This method triggers a job and polls Ameto until the result is available.
+     * @param asset Asset to be processed
+     * @return Processed asset
+     */
     public ProcessedAsset push(Asset asset) {
         int pendingJobStatus = 0;
         JobDto job = new JobDto(asset.getId(), getId(), pendingJobStatus, null);
