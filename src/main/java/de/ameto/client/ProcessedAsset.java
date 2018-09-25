@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
+/**
+ * Represents the result of applying a {@link Pipeline} to an {@code Asset}.
+ */
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 @Getter
@@ -20,6 +23,12 @@ public class ProcessedAsset {
     private final AmetoApi api;
     private InputStream essence;
 
+    /**
+     * Returns the actual binary data of this processed asset.
+     * This information is retrieved lazily. If you are calling this method for the first time, a request to the
+     * Ameto API will be sent to retrieve the asset essence.
+     * @return Asset essence
+     */
     public InputStream getEssence() {
         if (essence == null) {
             Response<ResponseBody> getJobResult;
