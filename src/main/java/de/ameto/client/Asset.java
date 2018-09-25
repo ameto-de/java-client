@@ -11,6 +11,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a meaningful piece of data.
+ * Assets are archived by Ameto and will never be modified. Any operation to an @{code Asset} will produce a
+ * {@link ProcessedAsset}. Such operations are available through {@link Pipeline}s.
+ */
 @RequiredArgsConstructor
 @EqualsAndHashCode(of={"id"})
 @Getter
@@ -20,6 +25,10 @@ public class Asset {
     private final AmetoApi api;
     private Set<ProcessedAsset> variants;
 
+    /**
+     * Returns assets that were derived from this asset using a pipeline.
+     * @return Processed assets
+     */
     public Set<ProcessedAsset> getVariants() {
         if (variants == null) {
             Response<AssetMetadata> metadata;
