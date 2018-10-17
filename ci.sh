@@ -8,7 +8,7 @@ setup_test_env() {
     local network_name=${project_name}_default
     docker-compose -f docker-compose.ci.yml up -d
     sleep 30
-    local ametoctl="dev.digitalernachschub.de/ameto/ametoctl:0.13.0"
+    local ametoctl="dev.digitalernachschub.de/ameto/ametoctl:0.15.0"
     local tenant_id=$(docker run --interactive --network=${network_name} \
         --rm ${ametoctl} --api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken \
         tenants add testtenant)
@@ -21,10 +21,9 @@ setup_test_env() {
         --rm ${ametoctl} --api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken \
         users list --token ${tenant_id} ${user_id})
     export AMETO_API_TOKEN=${api_token}
-    ametoctl operators package noop-operator.toml | \
-        docker run --interactive --network=${network_name} \
-            --rm ${ametoctl} --api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken \
-            operators add -
+    docker run --interactive --network=${network_name} \
+        --rm ${ametoctl} --api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken \
+        operators add https://operators.ameto.de/shrink-1.1.0.tar.xz
     sleep 10
 }
 

@@ -1,6 +1,7 @@
 package de.ameto.client;
 
 import de.ameto.client.operators.Operator;
+import de.ameto.client.operators.Shrink;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -9,8 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
@@ -24,29 +23,14 @@ import static org.junit.Assert.assertThat;
 
 public class AmetoTest {
     private static Ameto ameto;
-    private static Operator noopOperator;
+    private static Operator shrinkOperator;
 
     @Before
     public void setUp() {
         String apiUrl = System.getenv().getOrDefault("AMETO_API_URL", "http://localhost:9200");
         String apiToken = System.getenv().getOrDefault("AMETO_API_TOKEN", "anyToken");
         ameto = new Ameto(apiUrl, apiToken);
-        noopOperator = new Operator() {
-            @Override
-            public String getName() {
-                return "noop";
-            }
-
-            @Override
-            public String getVersion() {
-                return "1.0.0-test";
-            }
-
-            @Override
-            public List<String> getConsumes() {
-                return null;
-            }
-        };
+        shrinkOperator = new Shrink("1.1.0");
     }
 
     @Test
@@ -54,7 +38,7 @@ public class AmetoTest {
         Collection<Pipeline> pipelines = ameto.getPipelines();
         String pipelineName = "anyName";
 
-        ameto.add(pipelineName, noopOperator);
+        ameto.add(pipelineName, shrinkOperator);
         Thread.sleep(1000L);
 
         Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
@@ -83,7 +67,7 @@ public class AmetoTest {
         };
 
         assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> ameto.add(pipelineName, noopOperator, unknownOperator, noopOperator))
+                .isThrownBy(() -> ameto.add(pipelineName, shrinkOperator, unknownOperator, shrinkOperator))
                 .withMessageContaining(unknownOperator.getName());
         Collection<Pipeline> pipelines = ameto.getPipelines();
         assertThat(pipelines, not(hasItem(pipelineWithName(pipelineName))));
@@ -124,18 +108,17 @@ public class AmetoTest {
 
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
-        Pipeline pipeline = ameto.add("jpegTestPipeline", noopOperator);
+        Pipeline pipeline = ameto.add("jpegTestPipeline", shrinkOperator);
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
 
-        InputStream imageBytes = Files.newInputStream(Paths.get("src/integration/resources/flower.jpg"));
-        Assertions.assertThat(processedAsset.getEssence()).hasSameContentAs(imageBytes);
+        Assertions.assertThat(processedAsset.getEssence().available()).isGreaterThan(0);
     }
 
     @Test
     public void testAssetContainsProcessedAssetAsVariant() throws IOException {
-        Pipeline pipeline = ameto.add("jpegTestPipeline", noopOperator);
+        Pipeline pipeline = ameto.add("jpegTestPipeline", shrinkOperator);
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
