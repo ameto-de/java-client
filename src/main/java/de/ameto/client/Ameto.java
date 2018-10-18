@@ -99,7 +99,7 @@ public class Ameto {
         Response<PipelineDto> response;
         try {
             List<PipelineDto.Step> steps_ = allOperators.stream()
-                    .map(operator -> new PipelineDto.Step(operator.getName(), operator.getVersion()))
+                    .map(operator -> new PipelineDto.Step(operator.getName(), operator.getVersion(), operator.getArguments()))
                     .collect(Collectors.toList());
             PipelineDto pipeline = new PipelineDto(name, steps_);
             response = ameto.add(pipeline).execute();

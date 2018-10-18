@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,16 +20,9 @@ class PipelineDto {
     private final List<Step> steps;
 
     @Value
-    @RequiredArgsConstructor
     public static class Step {
         String operator;
         String version;
         List<String> arguments;
-
-        public Step(String operator, String version) {
-            this.operator = operator;
-            this.version = version;
-            arguments = Collections.emptyList();
-        }
     }
 }
