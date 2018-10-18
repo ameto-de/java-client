@@ -1,6 +1,6 @@
 package de.ameto.client.operators;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class Shrink implements Operator {
@@ -22,6 +22,6 @@ public class Shrink implements Operator {
 
     @Override
     public List<String> getConsumes() {
-        return Collections.singletonList("image/jpeg");
+        return Arrays.asList("image/jpeg", "image/png");
     }
 }
