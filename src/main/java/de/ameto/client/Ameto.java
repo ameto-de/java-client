@@ -157,6 +157,11 @@ public class Ameto {
             public List<String> getConsumes() {
                 throw new UnsupportedOperationException();
             }
+
+            @Override
+            public List<String> getArguments() {
+                return Collections.unmodifiableList(step.getArguments());
+            }
         };
     }
 
