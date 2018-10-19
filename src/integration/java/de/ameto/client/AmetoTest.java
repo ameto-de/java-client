@@ -1,6 +1,7 @@
 package de.ameto.client;
 
 import de.ameto.client.operators.Operator;
+import de.ameto.client.operators.Resize;
 import de.ameto.client.operators.Shrink;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Description;
@@ -24,6 +25,7 @@ import static org.junit.Assert.assertThat;
 public class AmetoTest {
     private static Ameto ameto;
     private static Operator shrinkOperator;
+    private static Operator resizeOperator;
 
     @Before
     public void setUp() {
@@ -31,6 +33,7 @@ public class AmetoTest {
         String apiToken = System.getenv().getOrDefault("AMETO_API_TOKEN", "anyToken");
         ameto = new Ameto(apiUrl, apiToken);
         shrinkOperator = new Shrink("1.1.0");
+        resizeOperator = new Resize("0.1.0", 64, 64);
     }
 
     @Test
@@ -108,12 +111,10 @@ public class AmetoTest {
 
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
-        Pipeline pipeline = ameto.add("jpegTestPipeline", shrinkOperator);
+        Pipeline pipeline = ameto.add("jpegTestPipeline", resizeOperator, shrinkOperator);
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
-
-        Assertions.assertThat(processedAsset.getEssence().available()).isGreaterThan(0);
     }
 
     @Test
