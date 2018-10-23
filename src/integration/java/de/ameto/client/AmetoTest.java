@@ -10,6 +10,8 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -115,6 +117,20 @@ public class AmetoTest {
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
+    }
+
+    @Test
+    public void testResizeExactGivesImageWithSpecifiedDimensions() throws IOException, InterruptedException {
+        final int targetWidth = 42;
+        final int targetHeight = 24;
+        Pipeline pipeline = ameto.add("exactResize", new Resize("0.1.0", targetWidth, targetHeight, Resize.Mode.EXACT));
+        Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
+        Thread.sleep(3000L);
+
+        ProcessedAsset processedAsset = pipeline.push(asset);
+        BufferedImage resizedImage = ImageIO.read(processedAsset.getEssence());
+        Assertions.assertThat(resizedImage.getWidth()).isEqualTo(targetWidth);
+        Assertions.assertThat(resizedImage.getHeight()).isEqualTo(targetHeight);
     }
 
     @Test
