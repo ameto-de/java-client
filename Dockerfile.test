@@ -2,4 +2,4 @@ FROM gradle:4.4-jdk-alpine as gradle
 COPY --chown=gradle:gradle . project
 WORKDIR project
 
-CMD ["gradle", "--no-daemon", "--full-stacktrace", "integrationTest"]
+CMD ["gradle", "--no-daemon", "--info", "--full-stacktrace", "integrationTest"]
