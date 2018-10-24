@@ -35,7 +35,7 @@ public class AmetoTest {
         String apiToken = System.getenv().getOrDefault("AMETO_API_TOKEN", "anyToken");
         ameto = new Ameto(apiUrl, apiToken);
         shrinkOperator = new Shrink();
-        resizeOperator = new Resize("1.0.0", 64, 64);
+        resizeOperator = new Resize(64, 64);
     }
 
     @Test
@@ -123,7 +123,7 @@ public class AmetoTest {
     public void testResizeExactGivesImageWithSpecifiedDimensions() throws IOException, InterruptedException {
         final int targetWidth = 42;
         final int targetHeight = 24;
-        Pipeline pipeline = ameto.add("exactResize", new Resize("1.0.0", targetWidth, targetHeight, Resize.Mode.EXACT));
+        Pipeline pipeline = ameto.add("exactResize", new Resize(targetWidth, targetHeight, Resize.Mode.EXACT));
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
         Thread.sleep(3000L);
 
