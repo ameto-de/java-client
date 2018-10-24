@@ -16,7 +16,10 @@ public class Shrink implements Operator {
     /**
      * Inizializes a shrink operator of the specified version.
      * @param version Operator version
+     * @deprecated Explicit operator versioning will be removed in the future.
+     * Please use {@link Shrink#Shrink()} instead.
      */
+    @Deprecated
     public Shrink(String version) {
         this.version = version;
     }

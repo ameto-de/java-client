@@ -34,7 +34,7 @@ public class AmetoTest {
         String apiUrl = System.getenv().getOrDefault("AMETO_API_URL", "http://localhost:9200");
         String apiToken = System.getenv().getOrDefault("AMETO_API_TOKEN", "anyToken");
         ameto = new Ameto(apiUrl, apiToken);
-        shrinkOperator = new Shrink("1.1.0");
+        shrinkOperator = new Shrink();
         resizeOperator = new Resize("1.0.0", 64, 64);
     }
 
