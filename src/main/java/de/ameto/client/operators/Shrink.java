@@ -6,6 +6,10 @@ import java.util.List;
 public class Shrink implements Operator {
     private final String version;
 
+    /**
+     * Inizializes a shrink operator.
+     * @param version Operator version
+     */
     public Shrink(String version) {
         this.version = version;
     }
