@@ -7,7 +7,14 @@ public class Shrink implements Operator {
     private final String version;
 
     /**
-     * Inizializes a shrink operator.
+     * Initializes a shrink operator.
+     */
+    public Shrink() {
+        this.version = "1.1.0";
+    }
+
+    /**
+     * Inizializes a shrink operator of the specified version.
      * @param version Operator version
      */
     public Shrink(String version) {
