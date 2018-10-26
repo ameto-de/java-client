@@ -8,6 +8,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,34 @@ public class Pipeline {
     private final String name;
     @Getter
     private final List<Operator> steps;
+
+    @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+    public static class Builder {
+        private final AmetoApi api;
+        private final String name;
+
+        public Pipeline format(Operator operator) {
+            Response<PipelineDto> response;
+            try {
+                List<PipelineDto.Step> steps_ = Collections.singletonList(
+                        new PipelineDto.Step(operator.getName(), operator.getVersion(), operator.getArguments())
+                );
+                PipelineDto pipeline = new PipelineDto(name, steps_);
+                response = api.add(pipeline).execute();
+                if (!response.isSuccessful()) {
+                    Optional<ResponseBody> errorResponse = Optional.ofNullable(response.errorBody());
+                    if (errorResponse.isPresent()) {
+                        throw new AmetoException(errorResponse.get().string());
+                    }
+                    throw new AmetoException("An error occurred when submitting the pipeline to the server.");
+                }
+            } catch (IOException e) {
+                throw new AmetoException("Unable to send pipeline request to the Ameto API server", e);
+            }
+            String pipelineId = response.body().getId();
+            return new Pipeline(api, pipelineId, name, Collections.singletonList(operator));
+        }
+    }
 
     /**
      * Applies this processing pipeline to the specified asset.

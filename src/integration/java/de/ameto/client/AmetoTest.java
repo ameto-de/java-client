@@ -43,7 +43,8 @@ public class AmetoTest {
         Collection<Pipeline> pipelines = ameto.getPipelines();
         String pipelineName = "anyName";
 
-        ameto.add(pipelineName, shrinkOperator);
+        ameto.add(pipelineName)
+                .format(shrinkOperator);
         Thread.sleep(1000L);
 
         Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();

@@ -82,6 +82,10 @@ public class Ameto {
         return Optional.empty();
     }
 
+    public Pipeline.Builder add(String name) {
+        return new Pipeline.Builder(ameto, name);
+    }
+
     /**
      * Adds the specified pipeline to ameto.
      * If a pipeline with the specified name already exists, it will be overwritten.
