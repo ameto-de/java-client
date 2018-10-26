@@ -53,6 +53,7 @@ public class AmetoTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     public void testAddPipelineThrowsExceptionWhenOperatorIsUnknown() {
         String pipelineName = "anyName2";
         Operator unknownOperator = new Operator() {
@@ -140,7 +141,8 @@ public class AmetoTest {
 
     @Test
     public void testAssetContainsProcessedAssetAsVariant() throws IOException {
-        Pipeline pipeline = ameto.add("jpegTestPipeline", shrinkOperator);
+        Pipeline pipeline = ameto.add("jpegTestPipeline")
+            .format(shrinkOperator);
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
