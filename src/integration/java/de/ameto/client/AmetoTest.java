@@ -126,7 +126,9 @@ public class AmetoTest {
     public void testResizeExactGivesImageWithSpecifiedDimensions() throws IOException, InterruptedException {
         final int targetWidth = 42;
         final int targetHeight = 24;
-        Pipeline pipeline = ameto.add("exactResize", new Resize(targetWidth, targetHeight, Resize.Mode.EXACT));
+        Pipeline pipeline = ameto.add("exactResize")
+                .resize(targetWidth, targetHeight, Resize.Mode.EXACT)
+                .format(new Shrink());
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
         Thread.sleep(3000L);
 

@@ -39,7 +39,12 @@ public class Pipeline {
         }
 
         public Builder resize(int width, int height) {
-            steps.add(new Resize(width, height));
+            this.resize(width, height, Resize.Mode.FIT);
+            return this;
+        }
+
+        public Builder resize(int width, int height, Resize.Mode mode) {
+            steps.add(new Resize(width, height, mode));
             return this;
         }
 
