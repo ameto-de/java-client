@@ -1,6 +1,7 @@
 package de.ameto.client;
 
 import de.ameto.client.operators.Operator;
+import de.ameto.client.operators.Resize;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +9,10 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Represents a series of processing steps used to convert or transform assets.
@@ -25,17 +27,29 @@ public class Pipeline {
     @Getter
     private final List<Operator> steps;
 
-    @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
     public static class Builder {
         private final AmetoApi api;
         private final String name;
+        private final List<Operator> steps;
+
+        Builder(AmetoApi api, String name) {
+            this.api = api;
+            this.name = name;
+            steps = new ArrayList<>();
+        }
+
+        public Builder resize(int width, int height) {
+            steps.add(new Resize(width, height));
+            return this;
+        }
 
         public Pipeline format(Operator operator) {
+            steps.add(operator);
             Response<PipelineDto> response;
             try {
-                List<PipelineDto.Step> steps_ = Collections.singletonList(
-                        new PipelineDto.Step(operator.getName(), operator.getVersion(), operator.getArguments())
-                );
+                List<PipelineDto.Step> steps_ = steps.stream()
+                        .map(op -> new PipelineDto.Step(op.getName(), op.getVersion(), op.getArguments()))
+                        .collect(Collectors.toList());
                 PipelineDto pipeline = new PipelineDto(name, steps_);
                 response = api.add(pipeline).execute();
                 if (!response.isSuccessful()) {
@@ -49,7 +63,7 @@ public class Pipeline {
                 throw new AmetoException("Unable to send pipeline request to the Ameto API server", e);
             }
             String pipelineId = response.body().getId();
-            return new Pipeline(api, pipelineId, name, Collections.singletonList(operator));
+            return new Pipeline(api, pipelineId, name, steps);
         }
     }
 

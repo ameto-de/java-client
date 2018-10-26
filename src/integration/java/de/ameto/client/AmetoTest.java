@@ -114,7 +114,9 @@ public class AmetoTest {
 
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
-        Pipeline pipeline = ameto.add("jpegTestPipeline", resizeOperator, shrinkOperator);
+        Pipeline pipeline = ameto.add("jpegTestPipeline")
+            .resize(64, 64)
+            .format(shrinkOperator);
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
