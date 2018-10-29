@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class AmetoTest {
-    private static final long GRACE_PERIOD = 3000L;
+    private static final long GRACE_PERIOD = 4000L;
     private static Ameto ameto;
 
     @Before
