@@ -17,7 +17,6 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import static de.ameto.client.Pipeline.Format.Jpeg;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -112,7 +111,7 @@ public class AmetoTest {
     }
 
     @Test
-    public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
+    public void testAmetoProcessesJpegImage() {
         Pipeline pipeline = ameto.add("jpegTestPipeline")
             .resize(64, 64)
             .format(Jpeg);
@@ -138,7 +137,7 @@ public class AmetoTest {
     }
 
     @Test
-    public void testAssetContainsProcessedAssetAsVariant() throws IOException {
+    public void testAssetContainsProcessedAssetAsVariant() {
         Pipeline pipeline = ameto.add("jpegTestPipeline")
             .format(Jpeg);
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
