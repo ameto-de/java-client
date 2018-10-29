@@ -130,7 +130,7 @@ public class Pipeline {
     }
 
     private String submitJob(JobDto job) throws IOException {
-        Response<JobDto> addJobResponse = api.add(job).execute();
+        Response<SubmitJobResponse> addJobResponse = api.add(job).execute();
         if (!addJobResponse.isSuccessful()) {
             Optional<ResponseBody> errorResponse = Optional.ofNullable(addJobResponse.errorBody());
             String errorMessage = errorResponse.map(responseBody -> {
@@ -142,7 +142,7 @@ public class Pipeline {
             }).orElse("Unspecified error");
             throw new AmetoException("Job submission failed with the following error:" + errorMessage);
         }
-        Optional<JobDto> jobResponse = Optional.ofNullable(addJobResponse.body());
+        Optional<SubmitJobResponse> jobResponse = Optional.ofNullable(addJobResponse.body());
         return jobResponse
                 .orElseThrow(() -> new AmetoException("Job submission returned empty response"))
                 .getId();
