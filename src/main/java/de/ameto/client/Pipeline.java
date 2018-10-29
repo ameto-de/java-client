@@ -101,9 +101,11 @@ public class Pipeline {
             long retryBackoff = 5000L;
             for (int attempt = 0; attempt < retries; attempt++) {
                 Response<GetJobResponse> jobsResponse = api.getJob(jobId).execute();
-                Optional<GetJobResponse> currentJob = Optional.ofNullable(jobsResponse.body());
-                if (currentJob.isPresent() && currentJob.get().getStatus() == Job.Status.Finished) {
-                    break;
+                Optional<ProcessedAsset> jobResult = Optional.ofNullable(jobsResponse.body())
+                        .filter(j -> j.getStatus() == Job.Status.Finished)
+                        .map(j -> new ProcessedAsset(j.getResult().get().getId(), api));
+                if (jobResult.isPresent()) {
+                    return jobResult.get();
                 }
                 try {
                     Thread.sleep(retryBackoff);
@@ -120,12 +122,10 @@ public class Pipeline {
                 }
                 throw new AmetoException(errorMessage);
             }
-            return Optional.ofNullable(getJobResponse.body())
-                    .map(j -> new ProcessedAsset(j.getResult().get().getId(), api))
-                    .orElseThrow(() -> new AmetoException("Fetching job information was successful, but the response is empty"));
         } catch (IOException e) {
             throw new AmetoException("Failed to process asset in pipeline", e);
         }
+        throw new AmetoException("Job result could not be retrieved.");
     }
 
     private String submitJob(AssetReference asset, String pipeline) {
