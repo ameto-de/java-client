@@ -26,11 +26,18 @@ services:
       MINIO_SECRET_KEY: verySecretKey1
     ports:
       - "9000:9000"
+  operator-registry:
+    image: nginx:alpine
+    ports:
+    - "9010:80"
+    volumes:
+    - "./operators/:/usr/share/nginx/html:ro"
   api:
     image: dev.digitalernachschub.de/ameto/api
     depends_on:
       - 'kafka'
       - 'object-store'
+      - 'operator-registry'
     ports:
       - "9100:5000"
     environment:
