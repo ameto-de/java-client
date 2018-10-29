@@ -96,12 +96,6 @@ public class Pipeline {
      */
     public ProcessedAsset push(Asset asset) {
         String jobId = submitJob(new AssetReference(asset.getId()), getId());
-        // FIXME: Sleep long enough so GET /job does not return 404
-        try {
-            Thread.sleep(2000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         int retries = 4;
         long retryBackoff = 5000L;
         for (int attempt = 0; attempt < retries; attempt++) {
@@ -111,7 +105,7 @@ public class Pipeline {
             } catch (IOException e) {
                 throw new AmetoException("Unable to request job data.", e);
             }
-            if (!jobsResponse.isSuccessful()) {
+            if (!jobsResponse.isSuccessful() && jobsResponse.code() != 404) {
                 Optional<ResponseBody> errorBody = Optional.ofNullable(jobsResponse.errorBody());
                 String errorMessage = "An error occurred when fetching job information for job " + jobId;
                 if (errorBody.isPresent()) {
