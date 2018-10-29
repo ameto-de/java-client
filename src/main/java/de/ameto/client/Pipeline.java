@@ -91,11 +91,12 @@ public class Pipeline {
      * This method triggers a job and polls Ameto until the result is available.
      * @param asset Asset to be processed
      * @return Processed asset
+     * @throws AmetoException if the pipeline job could not be submitted
      * @throws AmetoException if the asset could not be processed
      */
     public ProcessedAsset push(Asset asset) {
+        String jobId = submitJob(new AssetReference(asset.getId()), getId());
         try {
-            String jobId = submitJob(new AssetReference(asset.getId()), getId());
             int retries = 4;
             long retryBackoff = 5000L;
             for (int attempt = 0; attempt < retries; attempt++) {
@@ -127,9 +128,14 @@ public class Pipeline {
         }
     }
 
-    private String submitJob(AssetReference asset, String pipeline) throws IOException {
+    private String submitJob(AssetReference asset, String pipeline) {
         SubmitJobRequest job = new SubmitJobRequest(asset, pipeline);
-        Response<SubmitJobResponse> addJobResponse = api.add(job).execute();
+        Response<SubmitJobResponse> addJobResponse = null;
+        try {
+            addJobResponse = api.add(job).execute();
+        } catch (IOException e) {
+            throw new AmetoException("Unable to submit job.");
+        }
         if (!addJobResponse.isSuccessful()) {
             Optional<ResponseBody> errorResponse = Optional.ofNullable(addJobResponse.errorBody());
             String errorMessage = errorResponse.map(responseBody -> {
