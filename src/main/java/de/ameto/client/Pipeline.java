@@ -44,8 +44,7 @@ public class Pipeline {
         }
 
         public Builder resize(int width, int height) {
-            this.resize(width, height, Resize.Mode.FIT);
-            return this;
+            return this.resize(width, height, Resize.Mode.FIT);
         }
 
         public Builder resize(int width, int height, Resize.Mode mode) {
