@@ -53,7 +53,7 @@ public class Pipeline {
             return this;
         }
 
-        public Pipeline format(Format format) {
+        public Builder format(Format format) {
             Operator outputOperator;
             if (format == Format.Jpeg) {
                 outputOperator = new Shrink();
@@ -61,6 +61,10 @@ public class Pipeline {
                 throw new IllegalArgumentException("Unknown output format: " + format);
             }
             steps.add(outputOperator);
+            return this;
+        }
+
+        public Pipeline build() {
             Response<PipelineDto> response;
             try {
                 List<PipelineDto.Step> steps_ = steps.stream()

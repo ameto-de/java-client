@@ -40,7 +40,8 @@ public class AmetoTest {
         String pipelineName = "anyName";
 
         ameto.add(pipelineName)
-                .format(Jpeg);
+                .format(Jpeg)
+                .build();
         Thread.sleep(1000L);
 
         Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
@@ -113,8 +114,9 @@ public class AmetoTest {
     @Test
     public void testAmetoProcessesJpegImage() {
         Pipeline pipeline = ameto.add("jpegTestPipeline")
-            .resize(64, 64)
-            .format(Jpeg);
+                .resize(64, 64)
+                .format(Jpeg)
+                .build();
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
@@ -126,7 +128,8 @@ public class AmetoTest {
         final int targetHeight = 24;
         Pipeline pipeline = ameto.add("exactResize")
                 .resize(targetWidth, targetHeight, Resize.Mode.EXACT)
-                .format(Jpeg);
+                .format(Jpeg)
+                .build();
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
         Thread.sleep(3000L);
 
@@ -139,7 +142,8 @@ public class AmetoTest {
     @Test
     public void testAssetContainsProcessedAssetAsVariant() {
         Pipeline pipeline = ameto.add("jpegTestPipeline")
-            .format(Jpeg);
+                .format(Jpeg)
+                .build();
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
