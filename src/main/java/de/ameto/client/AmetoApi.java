@@ -28,7 +28,7 @@ interface AmetoApi {
     @GET("/job")
     Call<List<JobDto>> getJobs();
     @GET("/job/{jobId}")
-    Call<JobDto> getJob(@Path("jobId") String jobId);
+    Call<GetJobResponse> getJob(@Path("jobId") String jobId);
     @POST("/job")
     Call<SubmitJobResponse> add(@Body SubmitJobRequest job);
     @GET("/operator")
