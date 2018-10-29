@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class AmetoTest {
+    private static final long GRACE_PERIOD = 3000L;
     private static Ameto ameto;
 
     @Before
@@ -87,7 +88,7 @@ public class AmetoTest {
     public void addedAssetEventuallyAppearsInAssetList() throws Exception {
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
-        Thread.sleep(3000L);
+        Thread.sleep(GRACE_PERIOD);
         Set<Asset> assetsAfterUpload = ameto.getAssets();
         Assertions.assertThat(assetsAfterUpload).contains(asset);
     }
@@ -95,11 +96,11 @@ public class AmetoTest {
     @Test
     public void deletedAssetNoLongerAppearsInAssetList() throws Exception {
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
-        Thread.sleep(3000L);
+        Thread.sleep(GRACE_PERIOD);
 
         ameto.remove(asset);
 
-        Thread.sleep(3000L);
+        Thread.sleep(GRACE_PERIOD);
         Set<Asset> assetsAfterUpload = ameto.getAssets();
         Assertions.assertThat(assetsAfterUpload).doesNotContain(asset);
     }
@@ -118,7 +119,7 @@ public class AmetoTest {
                 .format(Jpeg)
                 .build();
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
-        Thread.sleep(3000L);
+        Thread.sleep(GRACE_PERIOD);
 
         ProcessedAsset processedAsset = pipeline.push(asset);
     }
@@ -132,11 +133,11 @@ public class AmetoTest {
                 .format(Jpeg)
                 .build();
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
-        Thread.sleep(3000L);
+        Thread.sleep(GRACE_PERIOD);
 
         ProcessedAsset processedAsset = pipeline.push(asset);
 
-        Thread.sleep(3000L);
+        Thread.sleep(GRACE_PERIOD);
         BufferedImage resizedImage = ImageIO.read(processedAsset.getEssence());
         Assertions.assertThat(resizedImage.getWidth()).isEqualTo(targetWidth);
         Assertions.assertThat(resizedImage.getHeight()).isEqualTo(targetHeight);
@@ -148,11 +149,11 @@ public class AmetoTest {
                 .format(Jpeg)
                 .build();
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
-        Thread.sleep(3000L);
+        Thread.sleep(GRACE_PERIOD);
 
         ProcessedAsset processedAsset = pipeline.push(asset);
 
-        Thread.sleep(3000L);
+        Thread.sleep(GRACE_PERIOD);
         Asset originalAsset = ameto.getAssets().stream()
                 .filter(a -> a.getId().equals(asset.getId()))
                 .findAny()
