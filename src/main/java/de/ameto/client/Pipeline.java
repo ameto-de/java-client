@@ -95,8 +95,7 @@ public class Pipeline {
      * @throws AmetoException if the asset could not be processed
      */
     public ProcessedAsset push(Asset asset) {
-        int pendingJobStatus = 0;
-        JobDto job = new JobDto(new AssetReference(asset.getId()), getId(), pendingJobStatus, null);
+        JobDto job = new JobDto(new AssetReference(asset.getId()), getId(), Job.Status.Pending, null);
         try {
             String jobId = submitJob(job);
             int retries = 3;
@@ -104,8 +103,7 @@ public class Pipeline {
             for (int attempt = 0; attempt < retries; attempt++) {
                 Response<JobDto> jobsResponse = api.getJob(jobId).execute();
                 Optional<JobDto> currentJob = Optional.ofNullable(jobsResponse.body());
-                int finishedJobStatus = 2;
-                if (currentJob.isPresent() && currentJob.get().getStatus() == finishedJobStatus) {
+                if (currentJob.isPresent() && currentJob.get().getStatus() == Job.Status.Finished) {
                     break;
                 }
                 try {

@@ -15,7 +15,9 @@ class JobDto {
     @JsonDeserialize(converter = AssetReferenceDeserializer.class)
     private final AssetReference asset;
     private final String pipeline;
-    private final int status;
+    @JsonSerialize(converter = JobStatusSerializer.class)
+    @JsonDeserialize(converter = JobStatusDeserializer.class)
+    private final Job.Status status;
     @JsonSerialize(converter = AssetReferenceSerializer.class)
     @JsonDeserialize(converter = AssetReferenceDeserializer.class)
     private final AssetReference result;
