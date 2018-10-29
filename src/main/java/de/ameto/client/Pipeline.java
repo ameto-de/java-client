@@ -94,9 +94,8 @@ public class Pipeline {
      * @throws AmetoException if the asset could not be processed
      */
     public ProcessedAsset push(Asset asset) {
-        SubmitJobRequest job = new SubmitJobRequest(new AssetReference(asset.getId()), getId());
         try {
-            String jobId = submitJob(job);
+            String jobId = submitJob(new AssetReference(asset.getId()), getId());
             int retries = 4;
             long retryBackoff = 5000L;
             for (int attempt = 0; attempt < retries; attempt++) {
@@ -128,7 +127,8 @@ public class Pipeline {
         }
     }
 
-    private String submitJob(SubmitJobRequest job) throws IOException {
+    private String submitJob(AssetReference asset, String pipeline) throws IOException {
+        SubmitJobRequest job = new SubmitJobRequest(asset, pipeline);
         Response<SubmitJobResponse> addJobResponse = api.add(job).execute();
         if (!addJobResponse.isSuccessful()) {
             Optional<ResponseBody> errorResponse = Optional.ofNullable(addJobResponse.errorBody());
