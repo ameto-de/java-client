@@ -43,7 +43,7 @@ public class AmetoTest {
         ameto.add(pipelineName)
                 .format(Jpeg)
                 .build();
-        Thread.sleep(1000L);
+        Thread.sleep(GRACE_PERIOD);
 
         Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
         assertThat(pipelinesAfterAdd, hasItem(pipelineWithName(pipelineName)));
