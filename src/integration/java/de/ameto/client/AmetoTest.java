@@ -112,12 +112,13 @@ public class AmetoTest {
     }
 
     @Test
-    public void testAmetoProcessesJpegImage() {
+    public void testAmetoProcessesJpegImage() throws InterruptedException {
         Pipeline pipeline = ameto.add("jpegTestPipeline")
                 .resize(64, 64)
                 .format(Jpeg)
                 .build();
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
+        Thread.sleep(3000L);
 
         ProcessedAsset processedAsset = pipeline.push(asset);
     }
