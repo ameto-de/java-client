@@ -96,7 +96,7 @@ public class Pipeline {
      */
     public ProcessedAsset push(Asset asset) {
         int pendingJobStatus = 0;
-        JobDto job = new JobDto(asset.getId(), getId(), pendingJobStatus, null);
+        JobDto job = new JobDto(new AssetReference(asset.getId()), getId(), pendingJobStatus, null);
         try {
             String jobId = submitJob(job);
             int retries = 3;
@@ -124,7 +124,7 @@ public class Pipeline {
                 throw new AmetoException(errorMessage);
             }
             return Optional.ofNullable(getJobResponse.body())
-                    .map(j -> new ProcessedAsset(j.getResult(), api))
+                    .map(j -> new ProcessedAsset(j.getResult().getId(), api))
                     .orElseThrow(() -> new AmetoException("Fetching job information was successful, but the response is empty"));
         } catch (IOException e) {
             throw new AmetoException("Failed to process asset in pipeline", e);

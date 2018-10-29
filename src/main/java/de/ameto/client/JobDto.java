@@ -1,6 +1,8 @@
 package de.ameto.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -9,8 +11,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class JobDto {
     private String id;
-    private final String asset;
+    @JsonSerialize(converter = AssetReferenceSerializer.class)
+    @JsonDeserialize(converter = AssetReferenceDeserializer.class)
+    private final AssetReference asset;
     private final String pipeline;
     private final int status;
-    private final String result;
+    @JsonSerialize(converter = AssetReferenceSerializer.class)
+    @JsonDeserialize(converter = AssetReferenceDeserializer.class)
+    private final AssetReference result;
 }

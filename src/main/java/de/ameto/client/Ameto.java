@@ -292,7 +292,7 @@ public class Ameto {
         val jobs = response.body();
         return Collections.unmodifiableList(jobs.stream()
                 .map(job -> new Job(
-                        job.getId(), job.getAsset(), job.getPipeline(), jobStatus(job.getStatus())))
+                        job.getId(), job.getAsset().getId(), job.getPipeline(), jobStatus(job.getStatus())))
                 .collect(Collectors.toList()));
     }
 
