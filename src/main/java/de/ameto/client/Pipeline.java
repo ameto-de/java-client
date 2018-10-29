@@ -98,7 +98,7 @@ public class Pipeline {
         JobDto job = new JobDto(new AssetReference(asset.getId()), getId(), Job.Status.Pending, null);
         try {
             String jobId = submitJob(job);
-            int retries = 3;
+            int retries = 4;
             long retryBackoff = 5000L;
             for (int attempt = 0; attempt < retries; attempt++) {
                 Response<JobDto> jobsResponse = api.getJob(jobId).execute();
