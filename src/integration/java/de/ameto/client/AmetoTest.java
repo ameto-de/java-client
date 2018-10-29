@@ -140,14 +140,16 @@ public class AmetoTest {
     }
 
     @Test
-    public void testAssetContainsProcessedAssetAsVariant() {
+    public void testAssetContainsProcessedAssetAsVariant() throws InterruptedException {
         Pipeline pipeline = ameto.add("jpegTestPipeline")
                 .format(Jpeg)
                 .build();
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
+        Thread.sleep(3000L);
 
         ProcessedAsset processedAsset = pipeline.push(asset);
 
+        Thread.sleep(3000L);
         Asset originalAsset = ameto.getAssets().stream()
                 .filter(a -> a.getId().equals(asset.getId()))
                 .findAny()
