@@ -2,6 +2,7 @@ package de.ameto.client;
 
 import de.ameto.client.operators.Operator;
 import de.ameto.client.operators.Resize;
+import de.ameto.client.operators.Shrink;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,10 @@ public class Pipeline {
     @Getter
     private final List<Operator> steps;
 
+    public enum Format {
+        Jpeg
+    }
+
     public static class Builder {
         private final AmetoApi api;
         private final String name;
@@ -48,8 +53,14 @@ public class Pipeline {
             return this;
         }
 
-        public Pipeline format(Operator operator) {
-            steps.add(operator);
+        public Pipeline format(Format format) {
+            Operator outputOperator;
+            if (format == Format.Jpeg) {
+                outputOperator = new Shrink();
+            } else {
+                throw new IllegalArgumentException("Unknown output format: " + format);
+            }
+            steps.add(outputOperator);
             Response<PipelineDto> response;
             try {
                 List<PipelineDto.Step> steps_ = steps.stream()

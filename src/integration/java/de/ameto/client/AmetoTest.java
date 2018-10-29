@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import static de.ameto.client.Pipeline.Format.Jpeg;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertNotNull;
@@ -26,14 +27,12 @@ import static org.junit.Assert.assertThat;
 
 public class AmetoTest {
     private static Ameto ameto;
-    private static Operator shrinkOperator;
 
     @Before
     public void setUp() {
         String apiUrl = System.getenv().getOrDefault("AMETO_API_URL", "http://localhost:9200");
         String apiToken = System.getenv().getOrDefault("AMETO_API_TOKEN", "anyToken");
         ameto = new Ameto(apiUrl, apiToken);
-        shrinkOperator = new Shrink();
     }
 
     @Test
@@ -42,7 +41,7 @@ public class AmetoTest {
         String pipelineName = "anyName";
 
         ameto.add(pipelineName)
-                .format(shrinkOperator);
+                .format(Jpeg);
         Thread.sleep(1000L);
 
         Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
@@ -54,6 +53,7 @@ public class AmetoTest {
     @SuppressWarnings("deprecation")
     public void testAddPipelineThrowsExceptionWhenOperatorIsUnknown() {
         String pipelineName = "anyName2";
+        Operator shrinkOperator = new Shrink();
         Operator unknownOperator = new Operator() {
             @Override
             public String getName() {
@@ -115,7 +115,7 @@ public class AmetoTest {
     public void testAmetoProcessesJpegImage() throws InterruptedException, IOException, ExecutionException {
         Pipeline pipeline = ameto.add("jpegTestPipeline")
             .resize(64, 64)
-            .format(shrinkOperator);
+            .format(Jpeg);
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
@@ -127,7 +127,7 @@ public class AmetoTest {
         final int targetHeight = 24;
         Pipeline pipeline = ameto.add("exactResize")
                 .resize(targetWidth, targetHeight, Resize.Mode.EXACT)
-                .format(new Shrink());
+                .format(Jpeg);
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
         Thread.sleep(3000L);
 
@@ -140,7 +140,7 @@ public class AmetoTest {
     @Test
     public void testAssetContainsProcessedAssetAsVariant() throws IOException {
         Pipeline pipeline = ameto.add("jpegTestPipeline")
-            .format(shrinkOperator);
+            .format(Jpeg);
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
 
         ProcessedAsset processedAsset = pipeline.push(asset);
