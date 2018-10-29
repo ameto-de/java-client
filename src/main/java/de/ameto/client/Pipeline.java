@@ -101,6 +101,14 @@ public class Pipeline {
             long retryBackoff = 5000L;
             for (int attempt = 0; attempt < retries; attempt++) {
                 Response<GetJobResponse> jobsResponse = api.getJob(jobId).execute();
+                if (!jobsResponse.isSuccessful()) {
+                    Optional<ResponseBody> errorBody = Optional.ofNullable(jobsResponse.errorBody());
+                    String errorMessage = "An error occurred when fetching job information for job " + jobId;
+                    if (errorBody.isPresent()) {
+                        errorMessage = errorBody.get().string();
+                    }
+                    throw new AmetoException(errorMessage);
+                }
                 Optional<ProcessedAsset> jobResult = Optional.ofNullable(jobsResponse.body())
                         .filter(j -> j.getStatus() == Job.Status.Finished)
                         .map(j -> new ProcessedAsset(j.getResult().get().getId(), api));
@@ -112,15 +120,6 @@ public class Pipeline {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-            Response<GetJobResponse> getJobResponse = api.getJob(jobId).execute();
-            if (!getJobResponse.isSuccessful()) {
-                Optional<ResponseBody> errorBody = Optional.ofNullable(getJobResponse.errorBody());
-                String errorMessage = "An error occurred when fetching job information for job " + jobId;
-                if (errorBody.isPresent()) {
-                    errorMessage = errorBody.get().string();
-                }
-                throw new AmetoException(errorMessage);
             }
         } catch (IOException e) {
             throw new AmetoException("Failed to process asset in pipeline", e);
