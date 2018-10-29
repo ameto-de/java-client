@@ -27,7 +27,6 @@ import static org.junit.Assert.assertThat;
 public class AmetoTest {
     private static Ameto ameto;
     private static Operator shrinkOperator;
-    private static Operator resizeOperator;
 
     @Before
     public void setUp() {
@@ -35,7 +34,6 @@ public class AmetoTest {
         String apiToken = System.getenv().getOrDefault("AMETO_API_TOKEN", "anyToken");
         ameto = new Ameto(apiUrl, apiToken);
         shrinkOperator = new Shrink();
-        resizeOperator = new Resize(64, 64);
     }
 
     @Test
