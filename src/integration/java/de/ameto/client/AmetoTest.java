@@ -134,6 +134,8 @@ public class AmetoTest {
         Thread.sleep(3000L);
 
         ProcessedAsset processedAsset = pipeline.push(asset);
+
+        Thread.sleep(3000L);
         BufferedImage resizedImage = ImageIO.read(processedAsset.getEssence());
         Assertions.assertThat(resizedImage.getWidth()).isEqualTo(targetWidth);
         Assertions.assertThat(resizedImage.getHeight()).isEqualTo(targetHeight);
