@@ -123,7 +123,9 @@ public class Pipeline {
                 }
                 throw new AmetoException(errorMessage);
             }
-            return new ProcessedAsset(getJobResponse.body().getResult(), api);
+            return Optional.ofNullable(getJobResponse.body())
+                    .map(j -> new ProcessedAsset(j.getResult(), api))
+                    .orElseThrow(() -> new AmetoException("Fetching job information was successful, but the response is empty"));
         } catch (IOException e) {
             throw new AmetoException("Failed to process asset in pipeline", e);
         }
