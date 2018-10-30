@@ -97,7 +97,8 @@ public class Pipeline {
     public ProcessedAsset push(Asset asset) {
         String jobId = submitJob(new AssetReference(asset.getId()), getId());
         int retries = 4;
-        long retryBackoff = 5000L;
+        double retryBackoff = 1000;
+        double retryBackoffExponent = 1.1;
         for (int attempt = 0; attempt < retries; attempt++) {
             Response<GetJobResponse> jobsResponse;
             try {
@@ -124,10 +125,11 @@ public class Pipeline {
                 return jobResult.get();
             }
             try {
-                Thread.sleep(retryBackoff);
+                Thread.sleep((long) retryBackoff);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            retryBackoff = Math.pow(retryBackoff, retryBackoffExponent);
         }
         throw new AmetoException("Job result could not be retrieved.");
     }
