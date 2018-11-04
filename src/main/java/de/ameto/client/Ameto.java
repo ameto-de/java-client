@@ -82,6 +82,12 @@ public class Ameto {
         return Optional.empty();
     }
 
+    /**
+     * Starts a pipeline build process.
+     * Existing Pipelines with the specified name are overwritten when the builder finishes.
+     * @param name Pipeline name
+     * @return Pipeline builder
+     */
     public Pipeline.Builder addPipeline(String name) {
         return new Pipeline.Builder(ameto, name);
     }

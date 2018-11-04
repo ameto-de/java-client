@@ -28,10 +28,17 @@ public class Pipeline {
     @Getter
     private final List<Operator> steps;
 
+    /**
+     * Describes the output format of a Pipeline
+     */
     public enum Format {
+        /** Specifies the format {@code image/jpeg} */
         Jpeg
     }
 
+    /**
+     * Represents a class used to configure a processing Pipeline.
+     */
     public static class Builder {
         private final AmetoApi api;
         private final String name;
@@ -43,15 +50,42 @@ public class Pipeline {
             steps = new ArrayList<>();
         }
 
+        /**
+         * Resizes the input asset to the specified dimensions.
+         * The resize operation preserves aspect ratio and the output dimensions
+         * never exceed the specified width and height.
+         *
+         * This is identical to calling {@link #resize(int, int, Resize.Mode)} with {@code Resize.Mode.FIT}
+         * as mode of operation.
+         * @param width Target width
+         * @param height Target height
+         * @return Pipeline builder
+         */
         public Builder resize(int width, int height) {
             return this.resize(width, height, Resize.Mode.FIT);
         }
 
+        /**
+         * Resizes the input asset to the specified dimensions using the specified mode of operation.
+         * The mode specifies whether or not aspect ratio should be preserved and whether the specified dimensions
+         * should be treated as an exact target, as a minimum size, or as a maximum size.
+         * Please see {@link Resize.Mode} for the different resize behaviours.
+         * @param width Target width
+         * @param height Target height
+         * @param mode Resize mode
+         * @return Pipeline builder
+         */
         public Builder resize(int width, int height, Resize.Mode mode) {
             steps.add(new Resize(width, height, mode));
             return this;
         }
 
+        /**
+         * Specifies the output format for assets processed by this Pipeline.
+         * As of now, the only output format is {@link Format#Jpeg}.
+         * @param format Output format
+         * @return Pipeline builder
+         */
         public Builder format(Format format) {
             Operator outputOperator;
             if (format == Format.Jpeg) {
@@ -63,6 +97,12 @@ public class Pipeline {
             return this;
         }
 
+        /**
+         * Creates a Pipeline from the Pipeline builder.
+         * This method submits Pipeline information to Ameto and overwrites existing pipelines with the same name.
+         * @return Pipeline object
+         * @throws AmetoException if the Pipeline information could not be submitted
+         */
         public Pipeline build() {
             Response<PipelineDto> response;
             try {
