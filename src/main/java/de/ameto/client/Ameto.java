@@ -289,7 +289,7 @@ public class Ameto {
      * @throws AmetoException if the request could not be sent
      */
     public List<Job> getJobs() {
-        Response<List<JobDto>> response;
+        Response<List<GetJobResponse>> response;
         try {
             response = ameto.getJobs().execute();
         } catch (IOException e) {
