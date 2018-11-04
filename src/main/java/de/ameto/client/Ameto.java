@@ -82,7 +82,7 @@ public class Ameto {
         return Optional.empty();
     }
 
-    public Pipeline.Builder add(String name) {
+    public Pipeline.Builder addPipeline(String name) {
         return new Pipeline.Builder(ameto, name);
     }
 
@@ -94,7 +94,7 @@ public class Ameto {
      * @param operators Subsequent processing steps
      * @return A new pipeline
      * @throws AmetoException if communication with the API was not possible or the response returned an error.
-     * @deprecated Please use {@link Ameto#add(String)} to create Pipelines.
+     * @deprecated Please use {@link Ameto#addPipeline(String)} to create Pipelines.
      */
     @Deprecated
     public Pipeline add(String name, Operator firstOperator, Operator... operators) {

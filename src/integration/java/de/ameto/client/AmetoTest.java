@@ -40,7 +40,7 @@ public class AmetoTest {
         Collection<Pipeline> pipelines = ameto.getPipelines();
         String pipelineName = "anyName";
 
-        ameto.add(pipelineName)
+        ameto.addPipeline(pipelineName)
                 .format(Jpeg)
                 .build();
         Thread.sleep(GRACE_PERIOD);
@@ -114,7 +114,7 @@ public class AmetoTest {
 
     @Test
     public void testAmetoProcessesJpegImage() throws InterruptedException {
-        Pipeline pipeline = ameto.add("jpegTestPipeline")
+        Pipeline pipeline = ameto.addPipeline("jpegTestPipeline")
                 .resize(64, 64)
                 .format(Jpeg)
                 .build();
@@ -128,7 +128,7 @@ public class AmetoTest {
     public void testResizeExactGivesImageWithSpecifiedDimensions() throws IOException, InterruptedException {
         final int targetWidth = 42;
         final int targetHeight = 24;
-        Pipeline pipeline = ameto.add("exactResize")
+        Pipeline pipeline = ameto.addPipeline("exactResize")
                 .resize(targetWidth, targetHeight, Resize.Mode.EXACT)
                 .format(Jpeg)
                 .build();
@@ -145,7 +145,7 @@ public class AmetoTest {
 
     @Test
     public void testAssetContainsProcessedAssetAsVariant() throws InterruptedException {
-        Pipeline pipeline = ameto.add("jpegTestPipeline")
+        Pipeline pipeline = ameto.addPipeline("jpegTestPipeline")
                 .format(Jpeg)
                 .build();
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
