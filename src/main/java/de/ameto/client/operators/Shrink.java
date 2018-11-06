@@ -13,17 +13,6 @@ public class Shrink implements Operator {
         this.version = "1.1.0";
     }
 
-    /**
-     * Inizializes a shrink operator of the specified version.
-     * @param version Operator version
-     * @deprecated Explicit operator versioning will be removed in the future.
-     * Please use {@link Shrink#Shrink()} instead.
-     */
-    @Deprecated
-    public Shrink(String version) {
-        this.version = version;
-    }
-
     @Override
     public String getName() {
         return "shrink";

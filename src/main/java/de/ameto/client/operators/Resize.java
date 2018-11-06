@@ -68,53 +68,6 @@ public class Resize implements Operator {
         );
     }
 
-    /**
-     * Initializes a resize operation using the specified operator version and target dimensions.
-     * The resize mode defaults to {@link Mode#FIT}.
-     * @param version Operator version
-     * @param width Target width
-     * @param height Target height
-     * @deprecated Support for explicit operator versioning will be removed in the future.
-     * Please use {@link Resize#Resize(int, int)} instead.
-     */
-    @Deprecated
-    public Resize(String version, int width, int height) {
-        this(version, width, height, Mode.FIT);
-    }
-
-    /**
-     * Initializes a resize operation using the specified operator version, target dimensions, and mode.
-     * @param version Operator version
-     * @param width Target width
-     * @param height Target height
-     * @param mode Resize mode
-     * @deprecated Support for explicit operator versioning will be removed in the future.
-     * Please use {@link Resize#Resize(int, int, Mode)} instead.
-     */
-    @Deprecated
-    public Resize(String version, int width, int height, Mode mode) {
-        this.version = version;
-        String modeAsString;
-        switch (mode) {
-            case EXACT:
-                modeAsString = "exact";
-                break;
-            case FILL:
-                modeAsString = "fill";
-                break;
-            case FIT:
-                modeAsString = "fit";
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported value for mode: " + mode);
-        }
-        arguments = Arrays.asList(
-                String.valueOf(width),
-                String.valueOf(height),
-                "--mode", modeAsString
-        );
-    }
-
     @Override
     public String getName() {
         return "resize";
