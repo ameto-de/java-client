@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Represents the Ameto client.
@@ -90,42 +89,6 @@ public class Ameto {
      */
     public Pipeline.Builder addPipeline(String name) {
         return new Pipeline.Builder(ameto, name);
-    }
-
-    /**
-     * Adds the specified pipeline to ameto.
-     * If a pipeline with the specified name already exists, it will be overwritten.
-     * @param name Pipeline name
-     * @param firstOperator First processing step
-     * @param operators Subsequent processing steps
-     * @return A new pipeline
-     * @throws AmetoException if communication with the API was not possible or the response returned an error.
-     * @deprecated Please use {@link Ameto#addPipeline(String)} to create Pipelines.
-     */
-    @Deprecated
-    public Pipeline add(String name, Operator firstOperator, Operator... operators) {
-        List<Operator> allOperators = Stream.concat(
-                Stream.of(firstOperator),
-                Arrays.stream(operators)
-        ).collect(Collectors.toList());
-        Response<PipelineDto> response;
-        try {
-            List<PipelineDto.Step> steps_ = allOperators.stream()
-                    .map(operator -> new PipelineDto.Step(operator.getName(), operator.getVersion(), operator.getArguments()))
-                    .collect(Collectors.toList());
-            PipelineDto pipeline = new PipelineDto(name, steps_);
-            response = ameto.add(pipeline).execute();
-            if (!response.isSuccessful()) {
-                Converter<ResponseBody, AddPipelineError> errorConverter =
-                        retrofit.responseBodyConverter(AddPipelineError.class, new Annotation[0]);
-                AddPipelineError error = errorConverter.convert(response.errorBody());
-                throw new AmetoException(error.getError());
-            }
-        } catch (IOException e) {
-            throw new AmetoException("Unable to send pipeline request to the Ameto API server", e);
-        }
-        String pipelineId = response.body().getId();
-        return new Pipeline(ameto, pipelineId, name, allOperators);
     }
 
     /**

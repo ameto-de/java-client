@@ -1,8 +1,6 @@
 package de.ameto.client;
 
-import de.ameto.client.operators.Operator;
 import de.ameto.client.operators.Resize;
-import de.ameto.client.operators.Shrink;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -19,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 import static de.ameto.client.Pipeline.Format.Jpeg;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -48,35 +46,6 @@ public class AmetoTest {
         Collection<Pipeline> pipelinesAfterAdd = ameto.getPipelines();
         assertThat(pipelinesAfterAdd, hasItem(pipelineWithName(pipelineName)));
         assertThat(pipelinesAfterAdd.size(), is(pipelines.size() + 1));
-    }
-
-    @Test
-    @SuppressWarnings("deprecation")
-    public void testAddPipelineThrowsExceptionWhenOperatorIsUnknown() {
-        String pipelineName = "anyName2";
-        Operator shrinkOperator = new Shrink();
-        Operator unknownOperator = new Operator() {
-            @Override
-            public String getName() {
-                return "unknownOperator";
-            }
-
-            @Override
-            public String getVersion() {
-                return "1.0.0-test";
-            }
-
-            @Override
-            public List<String> getConsumes() {
-                return null;
-            }
-        };
-
-        assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> ameto.add(pipelineName, shrinkOperator, unknownOperator, shrinkOperator))
-                .withMessageContaining(unknownOperator.getName());
-        Collection<Pipeline> pipelines = ameto.getPipelines();
-        assertThat(pipelines, not(hasItem(pipelineWithName(pipelineName))));
     }
 
     @Test
