@@ -1,8 +1,8 @@
 package de.ameto.client;
 
+import de.ameto.client.operators.EncodeJpeg;
 import de.ameto.client.operators.Operator;
 import de.ameto.client.operators.Resize;
-import de.ameto.client.operators.Shrink;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -92,7 +92,7 @@ public class Pipeline {
         public FinalizableBuilder format(Format format) {
             Operator outputOperator;
             if (format == Format.Jpeg) {
-                outputOperator = new Shrink();
+                outputOperator = new EncodeJpeg();
             } else {
                 throw new IllegalArgumentException("Unknown output format: " + format);
             }

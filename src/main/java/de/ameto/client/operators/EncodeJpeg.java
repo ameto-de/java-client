@@ -3,13 +3,13 @@ package de.ameto.client.operators;
 import java.util.Arrays;
 import java.util.List;
 
-public class Shrink implements Operator {
+public class EncodeJpeg implements Operator {
     private final String version;
 
     /**
      * Initializes a shrink operator.
      */
-    public Shrink() {
+    public EncodeJpeg() {
         this.version = "1.1.0";
     }
 
