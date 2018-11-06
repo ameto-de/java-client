@@ -54,10 +54,11 @@ public class Pipeline {
          * Resizes the input asset to the specified dimensions.
          * The resize operation preserves aspect ratio and the output dimensions
          * never exceed the specified width and height.
-         *
+         * <p>
          * This is identical to calling {@link #resize(int, int, Resize.Mode)} with {@code Resize.Mode.FIT}
          * as mode of operation.
-         * @param width Target width
+         *
+         * @param width  Target width
          * @param height Target height
          * @return Pipeline builder
          */
@@ -70,9 +71,10 @@ public class Pipeline {
          * The mode specifies whether or not aspect ratio should be preserved and whether the specified dimensions
          * should be treated as an exact target, as a minimum size, or as a maximum size.
          * Please see {@link Resize.Mode} for the different resize behaviours.
-         * @param width Target width
+         *
+         * @param width  Target width
          * @param height Target height
-         * @param mode Resize mode
+         * @param mode   Resize mode
          * @return Pipeline builder
          */
         public Builder resize(int width, int height, Resize.Mode mode) {
@@ -83,10 +85,11 @@ public class Pipeline {
         /**
          * Specifies the output format for assets processed by this Pipeline.
          * As of now, the only output format is {@link Format#Jpeg}.
+         *
          * @param format Output format
          * @return Pipeline builder
          */
-        public Builder format(Format format) {
+        public FinalizableBuilder format(Format format) {
             Operator outputOperator;
             if (format == Format.Jpeg) {
                 outputOperator = new Shrink();
@@ -94,8 +97,15 @@ public class Pipeline {
                 throw new IllegalArgumentException("Unknown output format: " + format);
             }
             steps.add(outputOperator);
-            return this;
+            return new FinalizableBuilder(api, name, steps);
         }
+    }
+
+    @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+    public static class FinalizableBuilder {
+        private final AmetoApi api;
+        private final String name;
+        private final List<Operator> steps;
 
         /**
          * Creates a Pipeline from the Pipeline builder.
