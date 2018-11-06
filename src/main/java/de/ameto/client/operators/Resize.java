@@ -29,16 +29,6 @@ public class Resize implements Operator {
     }
 
     /**
-     * Initializes a resize operation using the specified target dimensions.
-     * The resize mode defaults to {@link Mode#FIT}.
-     * @param width Target width
-     * @param height Target height
-     */
-    public Resize(int width, int height) {
-        this(width, height, Mode.FIT);
-    }
-
-    /**
      * Initializes a resize operation using the specified target dimensions and mode.
      * The resize mode defaults to {@link Mode#FIT}.
      * @param width Target width
