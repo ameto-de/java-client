@@ -2,7 +2,6 @@ package de.ameto.client;
 
 import de.ameto.client.operators.Normalize;
 import de.ameto.client.operators.Operator;
-import de.ameto.client.operators.Resize;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +34,26 @@ public class Pipeline {
     }
 
     /**
+     * Specifies the mode of the resize operation.
+     */
+    public enum ResizeMode {
+        /**
+         * Resizes the input image exactly to the specified dimensions.
+         */
+        EXACT,
+        /**
+         * Resizes the input image while preserving the aspect ratio and making the
+         * image at least as large as the specified dimensions.
+         */
+        FILL,
+        /**
+         * Resizes the input image while preserving the aspect ratio and making the
+         * image no larger than the specified dimensions.
+         */
+        FIT
+    }
+
+    /**
      * Represents a class used to configure a processing Pipeline.
      */
     public static class Builder {
@@ -54,7 +73,7 @@ public class Pipeline {
          * The resize operation preserves aspect ratio and the output dimensions
          * never exceed the specified width and height.
          * <p>
-         * This is identical to calling {@link #resize(int, int, Resize.Mode)} with {@code Resize.Mode.FIT}
+         * This is identical to calling {@link #resize(int, int, ResizeMode)} with {@code Pipeline.ResizeMode.FIT}
          * as mode of operation.
          *
          * @param width  Target width
@@ -62,21 +81,21 @@ public class Pipeline {
          * @return Pipeline builder
          */
         public Builder resize(int width, int height) {
-            return this.resize(width, height, Resize.Mode.FIT);
+            return this.resize(width, height, ResizeMode.FIT);
         }
 
         /**
          * Resizes the input asset to the specified dimensions using the specified mode of operation.
          * The mode specifies whether or not aspect ratio should be preserved and whether the specified dimensions
          * should be treated as an exact target, as a minimum size, or as a maximum size.
-         * Please see {@link Resize.Mode} for the different resize behaviours.
+         * Please see {@link ResizeMode} for the different resize behaviours.
          *
          * @param width  Target width
          * @param height Target height
          * @param mode   Resize mode
          * @return Pipeline builder
          */
-        public Builder resize(int width, int height, Resize.Mode mode) {
+        public Builder resize(int width, int height, ResizeMode mode) {
             String modeAsString;
             switch (mode) {
                 case EXACT:
@@ -127,6 +146,7 @@ public class Pipeline {
             steps.add(outputOperator);
             return new FinalizableBuilder(api, name, steps);
         }
+
     }
 
     @RequiredArgsConstructor(access = AccessLevel.PACKAGE)

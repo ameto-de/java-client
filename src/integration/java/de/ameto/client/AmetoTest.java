@@ -1,6 +1,5 @@
 package de.ameto.client;
 
-import de.ameto.client.operators.Resize;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -98,7 +97,7 @@ public class AmetoTest {
         final int targetWidth = 42;
         final int targetHeight = 24;
         Pipeline pipeline = ameto.addPipeline("exactResize")
-                .resize(targetWidth, targetHeight, Resize.Mode.EXACT)
+                .resize(targetWidth, targetHeight, Pipeline.ResizeMode.EXACT)
                 .format(Jpeg)
                 .build();
         Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));

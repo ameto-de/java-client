@@ -1,5 +1,7 @@
 package de.ameto.client.operators;
 
+import de.ameto.client.Pipeline;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -9,33 +11,13 @@ public class Resize implements Operator {
     private final List<String> arguments;
 
     /**
-     * Specifies the mode of the resize operation.
-     */
-    public enum Mode {
-        /**
-         * Resizes the input image exactly to the specified dimensions.
-         */
-        EXACT,
-        /**
-         * Resizes the input image while preserving the aspect ratio and making the
-         * image at least as large as the specified dimensions.
-         */
-        FILL,
-        /**
-         * Resizes the input image while preserving the aspect ratio and making the
-         * image no larger than the specified dimensions.
-         */
-        FIT
-    }
-
-    /**
      * Initializes a resize operation using the specified target dimensions and mode.
-     * The resize mode defaults to {@link Mode#FIT}.
+     * The resize mode defaults to {@link Pipeline.ResizeMode#FIT}.
      * @param width Target width
      * @param height Target height
      * @param mode Resize mode
      */
-    public Resize(int width, int height, Mode mode) {
+    public Resize(int width, int height, Pipeline.ResizeMode mode) {
         this.version = "1.0.0";
         String modeAsString;
         switch (mode) {
