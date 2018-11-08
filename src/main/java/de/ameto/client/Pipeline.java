@@ -1,6 +1,5 @@
 package de.ameto.client;
 
-import de.ameto.client.operators.Normalize;
 import de.ameto.client.operators.Operator;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -65,7 +64,12 @@ public class Pipeline {
             this.api = api;
             this.name = name;
             steps = new ArrayList<>();
-            steps.add(new Normalize());
+            steps.add(new DefaultOperator(
+                    "normalize",
+                    "0.1.0",
+                    Collections.singletonList("image/jpeg"),
+                    Collections.emptyList())
+            );
         }
 
         /**
