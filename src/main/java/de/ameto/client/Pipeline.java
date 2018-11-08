@@ -77,7 +77,31 @@ public class Pipeline {
          * @return Pipeline builder
          */
         public Builder resize(int width, int height, Resize.Mode mode) {
-            steps.add(new Resize(width, height, mode));
+            String modeAsString;
+            switch (mode) {
+                case EXACT:
+                    modeAsString = "exact";
+                    break;
+                case FILL:
+                    modeAsString = "fill";
+                    break;
+                case FIT:
+                    modeAsString = "fit";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unsupported value for mode: " + mode);
+            }
+            List<String> arguments = Arrays.asList(
+                    String.valueOf(width),
+                    String.valueOf(height),
+                    "--mode", modeAsString
+            );
+            steps.add(new DefaultOperator(
+                    "resize",
+                    "1.0.0",
+                    Collections.singletonList("image/jpeg"),
+                    arguments)
+            );
             return this;
         }
 
