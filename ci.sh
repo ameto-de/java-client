@@ -27,6 +27,9 @@ setup_test_env() {
     docker run --interactive --network=${network_name} \
         --rm ${ametoctl} --api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken \
         operators add https://operators.ameto.de/resize-1.0.0.tar.xz
+    docker run --interactive --network=${network_name} \
+        --rm ${ametoctl} --api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken \
+        operators add https://operators.ameto.de/normalize-0.1.0.tar.xz
     sleep 10
 }
 

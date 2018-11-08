@@ -1,6 +1,7 @@
 package de.ameto.client;
 
 import de.ameto.client.operators.EncodeJpeg;
+import de.ameto.client.operators.Normalize;
 import de.ameto.client.operators.Operator;
 import de.ameto.client.operators.Resize;
 import lombok.AccessLevel;
@@ -48,6 +49,7 @@ public class Pipeline {
             this.api = api;
             this.name = name;
             steps = new ArrayList<>();
+            steps.add(new Normalize());
         }
 
         /**
