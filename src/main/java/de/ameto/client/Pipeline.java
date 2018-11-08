@@ -1,6 +1,5 @@
 package de.ameto.client;
 
-import de.ameto.client.operators.EncodeJpeg;
 import de.ameto.client.operators.Normalize;
 import de.ameto.client.operators.Operator;
 import de.ameto.client.operators.Resize;
@@ -11,9 +10,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -94,7 +91,12 @@ public class Pipeline {
         public FinalizableBuilder format(Format format) {
             Operator outputOperator;
             if (format == Format.Jpeg) {
-                outputOperator = new EncodeJpeg();
+                outputOperator = new DefaultOperator(
+                        "shrink",
+                        "1.1.0",
+                        Arrays.asList("image/jpeg", "image/png"),
+                        Collections.emptyList()
+                );
             } else {
                 throw new IllegalArgumentException("Unknown output format: " + format);
             }
