@@ -112,6 +112,18 @@ public class AmetoTest {
     }
 
     @Test
+    public void testAutoOrient() throws IOException, InterruptedException {
+        Pipeline pipeline = ameto.addPipeline("autoOrient")
+                .autoOrient()
+                .format(Jpeg)
+                .build();
+        Asset asset = ameto.add(Paths.get("src/integration/resources/flower.jpg"));
+        Thread.sleep(GRACE_PERIOD);
+
+        ProcessedAsset processedAsset = pipeline.push(asset);
+    }
+
+    @Test
     public void testAssetContainsProcessedAssetAsVariant() throws InterruptedException {
         Pipeline pipeline = ameto.addPipeline("jpegTestPipeline")
                 .format(Jpeg)

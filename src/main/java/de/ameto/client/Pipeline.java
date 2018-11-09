@@ -58,18 +58,34 @@ public class Pipeline {
     public static class Builder {
         private final AmetoApi api;
         private final String name;
-        private final List<Operator> steps;
+        private final LinkedList<Operator> steps;
 
         Builder(AmetoApi api, String name) {
             this.api = api;
             this.name = name;
-            steps = new ArrayList<>();
+            steps = new LinkedList<>();
             steps.add(new DefaultOperator(
                     "normalize",
                     "0.1.0",
                     Collections.singletonList("image/jpeg"),
                     Collections.emptyList())
             );
+        }
+
+        public Builder autoOrient() {
+            steps.addFirst(new DefaultOperator(
+                    "read_exif",
+                    "0.1.0",
+                    Collections.singletonList("image/jpeg"),
+                    Collections.emptyList())
+            );
+            steps.add(new DefaultOperator(
+                    "auto_orient",
+                    "0.1.0",
+                    Collections.singletonList("image/png"),
+                    Collections.emptyList())
+            );
+            return this;
         }
 
         /**
