@@ -8,11 +8,12 @@ services:
       - 'zookeeper'
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT
-      KAFKA_PROTOCOL_NAME: INTERNAL
-      KAFKA_HOST_NAME: kafka
-      KAFKA_CREATE_TOPICS: assets:1:1,jobs:1:1,operators:1:1,pipelines:1:1,tenants:1:1,users:1:1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: INTERNAL://:9092,EXTERNAL://:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:9094
+      KAFKA_CREATE_TOPICS: assets:1:1,ameto-assets-changelog:1:1,jobs:1:1,ameto-jobs-changelog:1:1,operators:1:1,ameto-operators-changelog:1:1,pipelines:1:1,ameto-pipelines-changelog:1:1,tenants:1:1,ameto-tenants-changelog:1:1,users:1:1,ameto-users-changelog:1:1
   object-store:
     image: minio/minio
     command: server /data
