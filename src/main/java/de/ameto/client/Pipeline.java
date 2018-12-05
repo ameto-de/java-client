@@ -75,7 +75,7 @@ public class Pipeline {
         public Builder autoOrient() {
             steps.addFirst(new DefaultOperator(
                     "read_exif",
-                    "0.1.0",
+                    "1.0.0",
                     Collections.singletonList("image/jpeg"),
                     Collections.emptyList())
             );
