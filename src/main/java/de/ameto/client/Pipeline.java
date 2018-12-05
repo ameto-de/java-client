@@ -66,7 +66,7 @@ public class Pipeline {
             steps = new LinkedList<>();
             steps.add(new DefaultOperator(
                     "normalize",
-                    "0.1.0",
+                    "1.0.0",
                     Collections.singletonList("image/jpeg"),
                     Collections.emptyList())
             );
