@@ -81,7 +81,7 @@ public class Pipeline {
             );
             steps.add(new DefaultOperator(
                     "auto_orient",
-                    "0.1.0",
+                    "1.0.0",
                     Collections.singletonList("image/png"),
                     Collections.emptyList())
             );
