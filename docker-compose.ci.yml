@@ -41,10 +41,16 @@ services:
       - type: bind
         source: /run/docker.sock
         target: /var/run/docker.sock
+  proxy:
+    image: envoyproxy/envoy-alpine
+    depends_on:
+      - "api"
+    volumes:
+      - "./envoy.yml:/etc/envoy/envoy.yaml:ro"
   delivery:
     image: nginx
     depends_on:
-      - 'api'
+      - 'proxy'
       - 'object-store'
     volumes:
       - type: bind
