@@ -31,7 +31,7 @@ services:
     volumes:
     - "./operators/:/usr/share/nginx/html:ro"
   api:
-    image: dev.digitalernachschub.de/ameto/api:2.0.0
+    image: dev.digitalernachschub.de/ameto/api:3.0.0
     depends_on:
       - 'kafka'
       - 'object-store'
