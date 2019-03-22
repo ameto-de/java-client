@@ -8,7 +8,7 @@ setup_test_env() {
     local network_name=${project_name}_default
     docker-compose -f docker-compose.ci.yml up -d
     sleep 30
-    local docker_opts="--interactive --network=${network_name}"
+    local docker_opts="--interactive --network=${network_name} --env LANG=en_US.UTF-8"
     local ametoctl="dev.digitalernachschub.de/ameto/ametoctl:0.17.0"
     local ametoctl_opts="--api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken"
     local tenant_id=$(docker run ${docker_opts} \
