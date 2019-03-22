@@ -8,27 +8,28 @@ setup_test_env() {
     local network_name=${project_name}_default
     docker-compose -f docker-compose.ci.yml up -d
     sleep 30
+    local docker_opts="--interactive --network=${network_name}"
     local ametoctl="dev.digitalernachschub.de/ameto/ametoctl:0.17.0"
     local ametoctl_opts="--api-url http://delivery:80 --login admin --password V4l1dAdm1nT0ken"
-    local tenant_id=$(docker run --interactive --network=${network_name} \
+    local tenant_id=$(docker run ${docker_opts} \
         --rm ${ametoctl} ${ametoctl_opts} \
         tenants add testtenant)
     sleep 5
-    local user_id=$(docker run --interactive --network=${network_name} \
+    local user_id=$(docker run ${docker_opts} \
         --rm ${ametoctl} ${ametoctl_opts} users add ${tenant_id} user)
     sleep 5
-    local api_token=$(docker run --interactive --network=${network_name} \
+    local api_token=$(docker run ${docker_opts} \
         --rm ${ametoctl} ${ametoctl_opts} users list --token ${tenant_id} ${user_id})
     export AMETO_API_TOKEN=${api_token}
-    docker run --interactive --network=${network_name} \
+    docker run ${docker_opts} \
         --rm ${ametoctl} ${ametoctl_opts} operators add https://operators.ameto.de/shrink-1.1.0.tar.xz
-    docker run --interactive --network=${network_name} \
+    docker run ${docker_opts} \
         --rm ${ametoctl} ${ametoctl_opts} operators add https://operators.ameto.de/resize-1.0.0.tar.xz
-    docker run --interactive --network=${network_name} \
+    docker run ${docker_opts} \
         --rm ${ametoctl} ${ametoctl_opts} operators add https://operators.ameto.de/normalize-1.0.0.tar.xz
-    docker run --interactive --network=${network_name} \
+    docker run ${docker_opts} \
         --rm ${ametoctl} ${ametoctl_opts} operators add https://operators.ameto.de/read_exif-1.0.0.tar.xz
-    docker run --interactive --network=${network_name} \
+    docker run ${docker_opts} \
         --rm ${ametoctl} ${ametoctl_opts} operators add https://operators.ameto.de/auto_orient-1.0.0.tar.xz
     sleep 10
 }
