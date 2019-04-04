@@ -30,6 +30,16 @@ services:
     - "9010:80"
     volumes:
     - "./operators/:/usr/share/nginx/html:ro"
+  auth:
+    image: ameto/auth
+    command: --address 0.0.0.0
+    environment:
+      - AMETO_AUTH_KAFKA_BROKERS=kafka:9092
+      - AMETO_AUTH_ADMIN_USER=admin
+      - AMETO_AUTH_ADMIN_USER_PASSWORD=V4l1dAdm1nT0ken
+      - LANG=en_US.UTF-8
+    depends_on:
+      - kafka
   api:
     image: dev.digitalernachschub.de/ameto/api:3.0.0
     depends_on:
@@ -47,8 +57,6 @@ services:
       - AMETO_OBJECT_STORE_SECRET_KEY=verySecretKey1
       - AMETO_OBJECT_STORE_USE_TLS=false
       - AMETO_API_MAX_CONSISTENCY_LAG=1000
-      - AMETO_API_ADMIN_USER=admin
-      - AMETO_API_ADMIN_USER_PASSWORD=V4l1dAdm1nT0ken
       - AMETO_API_SECRET_KEY=abcd1234
     volumes:
       - type: bind
@@ -58,6 +66,7 @@ services:
     image: nginx
     depends_on:
       - 'api'
+      - 'auth'
       - 'object-store'
     ports:
       - "9200:80"

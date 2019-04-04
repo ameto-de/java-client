@@ -20,9 +20,20 @@ services:
     environment:
       MINIO_ACCESS_KEY: accessKey1
       MINIO_SECRET_KEY: verySecretKey1
+  auth:
+    image: ameto/auth
+    command: --address 0.0.0.0
+    environment:
+      - AMETO_AUTH_KAFKA_BROKERS=kafka:9092
+      - AMETO_AUTH_ADMIN_USER=admin
+      - AMETO_AUTH_ADMIN_USER_PASSWORD=V4l1dAdm1nT0ken
+      - LANG=en_US.UTF-8
+    depends_on:
+      - kafka
   api:
     image: dev.digitalernachschub.de/ameto/api:3.0.0
     depends_on:
+      - auth
       - 'kafka'
       - 'object-store'
     environment:
