@@ -49,6 +49,10 @@ deploy_release() {
 
 tear_down_test_env() {
     echo "####################"
+    echo "# auth service logs #"
+    echo "####################"
+    docker-compose -f docker-compose.ci.yml logs auth
+    echo "####################"
     echo "# API service logs #"
     echo "####################"
     docker-compose -f docker-compose.ci.yml logs api
