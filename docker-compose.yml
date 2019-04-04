@@ -41,7 +41,7 @@ services:
     depends_on:
       - kafka
   api:
-    image: dev.digitalernachschub.de/ameto/api:3.0.0
+    image: ameto/api
     depends_on:
       - 'kafka'
       - 'object-store'
@@ -49,15 +49,13 @@ services:
     ports:
       - "9100:5000"
     environment:
+      - AMETO_API_SERVICE_URL=http://127.0.0.1:5000
       - AMETO_KAFKA_BROKERS=kafka:9092
       - AMETO_API_BIND_ADDRESS=0.0.0.0
-      - AMETO_ADVERTISED_URL=http://localhost:9200
       - AMETO_OBJECT_STORE=object-store:9000
       - AMETO_OBJECT_STORE_ACCESS_KEY=accessKey1
       - AMETO_OBJECT_STORE_SECRET_KEY=verySecretKey1
       - AMETO_OBJECT_STORE_USE_TLS=false
-      - AMETO_API_MAX_CONSISTENCY_LAG=1000
-      - AMETO_API_SECRET_KEY=abcd1234
     volumes:
       - type: bind
         source: /run/docker.sock
